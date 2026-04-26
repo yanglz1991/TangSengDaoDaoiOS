@@ -4,7 +4,7 @@ workspace 'TangSengDaoDaoiOS.xcworkspace'
 
 post_install do |installer|
     # 填写你自己的开发者团队的team id
-    dev_team = "H8PU463W68"
+    dev_team = "F68A4Y2SZ5"
     project = installer.aggregate_targets[0].user_project
     project.targets.each do |target|
         target.build_configurations.each do |config|
@@ -23,6 +23,7 @@ post_install do |installer|
             config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
             config.build_settings['ENABLE_BITCODE'] = 'NO'
             config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+            config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
         end
         
     end
