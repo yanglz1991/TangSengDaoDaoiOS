@@ -26,12 +26,12 @@
      // 注册消息
     [[WKApp shared] registerCellClass:WKFileCell.class forMessageContntClass:WKFileContent.class];
     
-//    // file
-//    [self setMethod:WKPOINT_CATEGORY_PANELFUNCITEM_FILE handler:^id _Nullable(id  _Nonnull param) {
-//        WKPanelDefaultFuncItem *item = [[WKPanelFileFuncItem alloc] init];
-//        item.sort = 8000;
-//        return item;
-//    } category:WKPOINT_CATEGORY_PANELFUNCITEM];
+    // file
+    [self setMethod:WKPOINT_CATEGORY_PANELFUNCITEM_FILE handler:^id _Nullable(id  _Nonnull param) {
+        WKPanelDefaultFuncItem *item = [[WKPanelFileFuncItem alloc] init];
+        item.sort = 8000;
+        return item;
+    } category:WKPOINT_CATEGORY_PANELFUNCITEM];
 }
 
 
