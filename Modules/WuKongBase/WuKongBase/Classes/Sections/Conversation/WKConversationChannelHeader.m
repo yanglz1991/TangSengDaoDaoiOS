@@ -191,7 +191,14 @@
 
 - (void)setMemberCount:(NSInteger)memberCount {
     if(self.channelInfo && self.channelInfo.channel.channelType != WK_PERSON && self.channelInfo.channel.channelType != WK_CustomerService) {
-        self.subtitleLbl.text = [NSString stringWithFormat:LLang(@"%ld个成员"),memberCount];
+        if (memberCount < 0) {
+            // 非管理员不显示群成员人数
+            self.subtitleLbl.text = @"";
+            self.subtitleLbl.hidden = YES;
+        } else {
+            self.subtitleLbl.text = [NSString stringWithFormat:LLang(@"%ld个成员"),memberCount];
+            self.subtitleLbl.hidden = NO;
+        }
     }
     [self.subtitleLbl sizeToFit];
     

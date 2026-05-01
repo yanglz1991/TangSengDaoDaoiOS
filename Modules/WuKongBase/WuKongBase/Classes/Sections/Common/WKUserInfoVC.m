@@ -562,7 +562,7 @@
     __weak typeof(self) weakSelf = self;
     WKInputVC *inputVC = [WKInputVC new];
     inputVC.title = LLang(@"修改备注");
-    inputVC.maxLength = 10;
+    inputVC.maxLength = 30;
     NSString *name = self.viewModel.channelInfo.name;
     if(self.viewModel.channelInfo.remark && ![self.viewModel.channelInfo.remark isEqualToString:@""] ) {
         name = self.viewModel.channelInfo.remark;

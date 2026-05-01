@@ -543,11 +543,7 @@ static NSMutableDictionary *flameNodeCacheDict;
     if([name isEqualToString:@""] && messageModel.from) {
         name = messageModel.from.name;
     }
-   NSString *deviceName = [self getDeviceName:messageModel];
-    if(deviceName && ![deviceName isEqualToString:@""]) {
-        name = [NSString stringWithFormat:@"%@/%@",name,deviceName];
-    }
-   
+    // 关闭消息来源后缀（不再显示 名字/设备）
     return name;
 }
 

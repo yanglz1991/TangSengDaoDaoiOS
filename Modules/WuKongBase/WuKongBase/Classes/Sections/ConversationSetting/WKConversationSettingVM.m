@@ -310,29 +310,9 @@
     
    
     
+    // 去掉"我在本群的昵称"设置入口
     [[WKApp shared] setMethod:@"channelsetting.nameInGroup" handler:^id _Nullable(id  _Nonnull param) {
-        WKChannel *channel = param[@"channel"];
-        if(channel.channelType != WK_GROUP) {
-            return nil;
-        }
-        return  @{
-            @"height":WKSectionHeight,
-            @"items":@[
-                @{
-                    @"class":WKLabelItemModel.class,
-                    @"label":LLang(@"我在本群的昵称"),
-                    @"value":nameInGroup?:@"",
-                    @"showBottomLine":@(NO),
-                    @"showTopLine":@(NO),
-                    @"onClick":^{
-                        if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(settingOnGroupNoticeClick:)]) {
-                            [weakSelf.delegate settingOnNickNameInGroup:weakSelf];
-                        }
-                    }
-                },
-               ]
-
-        };
+        return nil;
     } category:WKPOINT_CATEGORY_CHANNELSETTING sort:89100];
     
    

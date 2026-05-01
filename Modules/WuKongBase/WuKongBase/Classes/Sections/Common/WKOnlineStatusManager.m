@@ -186,23 +186,8 @@ static WKOnlineStatusManager *_instance = nil;
 
 // 空表示不显示
 - (NSString *)onlineStatusTip:(WKChannelInfo *)channelInfo {
-    if(!channelInfo) {
-        return nil;
-    }
-    if(channelInfo.channel.channelType != WK_PERSON) {
-        return nil;
-    }
-    NSString *onlineDeviceName = [self deviceName:channelInfo.deviceFlag];
-    if(channelInfo.online) {
-        return [NSString stringWithFormat:LLang(@"%@在线"),onlineDeviceName];
-    }
-    if([[NSDate date] timeIntervalSince1970] - channelInfo.lastOffline<60) {
-       return [NSString stringWithFormat:LLang(@"刚刚%@在线"),onlineDeviceName];
-   }
-    if(channelInfo.lastOffline+60*60>[[NSDate date] timeIntervalSince1970]) {
-        return [NSString stringWithFormat:LLang(@"%0.0f分钟前%@在线"),([[NSDate date] timeIntervalSince1970]-channelInfo.lastOffline)/60,onlineDeviceName];
-    }
-    return  nil;
+    // 手机端不显示设备在线状态
+    return nil;
 }
 
 -(NSString*) deviceName:(WKDeviceFlagEnum)deviceFlag {
@@ -219,15 +204,8 @@ static WKOnlineStatusManager *_instance = nil;
 }
 
 -(NSString*) onlineStatusDetailTip:(WKChannelInfo*)channelInfo {
-    NSString *tip = [self  onlineStatusTip:channelInfo];
-    if(tip) {
-        return tip;
-    }
-    if(channelInfo.lastOffline == 0) {
-        return @"";
-    }
-//    NSString *onlineDeviceName = [self deviceName:channelInfo.deviceFlag];
-   return [NSString stringWithFormat:@"最后在线 %@",[WKTimeTool formatDateStyle1:[NSDate dateWithTimeIntervalSince1970:channelInfo.lastOffline]]];
+    // 手机端不显示设备在线状态
+    return nil;
 }
 
 

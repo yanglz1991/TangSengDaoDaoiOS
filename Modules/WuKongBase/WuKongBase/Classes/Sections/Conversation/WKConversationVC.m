@@ -233,7 +233,14 @@
     if(self.channelInfo) {
         
         self.channelHeader.channelInfo = self.channelInfo;
-        self.channelHeader.memberCount = self.conversationView.conversationVM.memberCount;
+        // 群成员人数仅管理员/群主可见
+        WKMemberRole myRole = self.conversationView.conversationVM.memberRole;
+        BOOL isAdmin = (myRole == WKMemberRoleManager || myRole == WKMemberRoleCreator);
+        if (self.channel.channelType != WK_GROUP || isAdmin) {
+            self.channelHeader.memberCount = self.conversationView.conversationVM.memberCount;
+        } else {
+            self.channelHeader.memberCount = -1;
+        }
         
         
         [self.channelHeader layoutSubviews];
