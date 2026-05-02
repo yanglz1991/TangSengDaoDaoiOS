@@ -300,23 +300,25 @@
 }
 
 -(void) refreshOnlineStatus:(WKConversationWrapModel*)model {
-    BOOL hasChannelInfo  = model.channelInfo?true:false;
-    // 在线状态
+    // 去掉聊天列表显示用户在线状态，保留以便后续恢复
     self.onlineBadgeView.hidden = YES;
-    if(model.channel.channelType == WK_PERSON) {
-        if(hasChannelInfo) {
-            if(model.channelInfo.online) {
-                self.onlineBadgeView.hidden = NO;
-                self.onlineBadgeView.tip = nil;
-            }else if ([[NSDate date] timeIntervalSince1970] - model.channelInfo.lastOffline<60) {
-                self.onlineBadgeView.hidden = NO;
-                           self.onlineBadgeView.tip = LLang(@"刚刚");
-            }else if( model.channelInfo.lastOffline+60*60>[[NSDate date] timeIntervalSince1970]) {
-                self.onlineBadgeView.hidden = NO;
-                self.onlineBadgeView.tip =[NSString stringWithFormat:LLang(@"%0.0f分钟"),([[NSDate date] timeIntervalSince1970]-model.channelInfo.lastOffline)/60];
-            }
-        }
-    }
+//    BOOL hasChannelInfo  = model.channelInfo?true:false;
+//    // 在线状态
+//    self.onlineBadgeView.hidden = YES;
+//    if(model.channel.channelType == WK_PERSON) {
+//        if(hasChannelInfo) {
+//            if(model.channelInfo.online) {
+//                self.onlineBadgeView.hidden = NO;
+//                self.onlineBadgeView.tip = nil;
+//            }else if ([[NSDate date] timeIntervalSince1970] - model.channelInfo.lastOffline<60) {
+//                self.onlineBadgeView.hidden = NO;
+//                           self.onlineBadgeView.tip = LLang(@"刚刚");
+//            }else if( model.channelInfo.lastOffline+60*60>[[NSDate date] timeIntervalSince1970]) {
+//                self.onlineBadgeView.hidden = NO;
+//                self.onlineBadgeView.tip =[NSString stringWithFormat:LLang(@"%0.0f分钟"),([[NSDate date] timeIntervalSince1970]-model.channelInfo.lastOffline)/60];
+//            }
+//        }
+//    }
 }
 
 -(void) refreshLastMessage:(WKConversationWrapModel*)model {

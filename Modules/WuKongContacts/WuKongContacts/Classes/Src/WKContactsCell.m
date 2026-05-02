@@ -74,25 +74,28 @@
     self.nameLbl.text = _contactModel.name;
     [self.nameLbl sizeToFit];
     
+    // 去掉联系人列表显示用户在线状态，保留以便后续恢复
     self.subtitleLbl.hidden = YES;
-    if(self.contactModel.channelInfo.lastOffline>0) {
-        self.subtitleLbl.hidden = NO;
-        self.subtitleLbl.text = [WKOnlineStatusManager.shared onlineStatusDetailTip:self.contactModel.channelInfo];
-        [self.subtitleLbl sizeToFit];
-    }
-  
-    
     self.onlineBadgeView.hidden = YES;
-    if(_contactModel.online) {
-         self.onlineBadgeView.hidden = NO;
-        self.onlineBadgeView.tip = nil;
-    }else if( [[NSDate date] timeIntervalSince1970] - _contactModel.lastOffline<60) {
-        self.onlineBadgeView.hidden = NO;
-                   self.onlineBadgeView.tip =LLang(@"刚刚");
-    } else if(_contactModel.lastOffline+60*60>[[NSDate date] timeIntervalSince1970]) {
-        self.onlineBadgeView.hidden = NO;
-        self.onlineBadgeView.tip =[NSString stringWithFormat:LLang(@"%0.0f分钟"),([[NSDate date] timeIntervalSince1970]-_contactModel.lastOffline)/60];
-    }
+//    self.subtitleLbl.hidden = YES;
+//    if(self.contactModel.channelInfo.lastOffline>0) {
+//        self.subtitleLbl.hidden = NO;
+//        self.subtitleLbl.text = [WKOnlineStatusManager.shared onlineStatusDetailTip:self.contactModel.channelInfo];
+//        [self.subtitleLbl sizeToFit];
+//    }
+//  
+//    
+//    self.onlineBadgeView.hidden = YES;
+//    if(_contactModel.online) {
+//         self.onlineBadgeView.hidden = NO;
+//        self.onlineBadgeView.tip = nil;
+//    }else if( [[NSDate date] timeIntervalSince1970] - _contactModel.lastOffline<60) {
+//        self.onlineBadgeView.hidden = NO;
+//                   self.onlineBadgeView.tip =LLang(@"刚刚");
+//    } else if(_contactModel.lastOffline+60*60>[[NSDate date] timeIntervalSince1970]) {
+//        self.onlineBadgeView.hidden = NO;
+//        self.onlineBadgeView.tip =[NSString stringWithFormat:LLang(@"%0.0f分钟"),([[NSDate date] timeIntervalSince1970]-_contactModel.lastOffline)/60];
+//    }
     
 }
 
