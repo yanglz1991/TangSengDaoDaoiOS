@@ -105,11 +105,11 @@
     [[WKGroupManager shared] searchMembers:self.channel keyword:nil limit:limit complete:^(WKChannelMemberCacheType cacheType, NSArray<WKChannelMember *> * _Nonnull members) {
         if(members.count >= limit) {
             weakSelf.topNMembers = [members subarrayWithRange:NSMakeRange(0, members.count-1)];
-            weakSelf.settingMemberGridView.hasMore = true;
         }else {
             weakSelf.topNMembers = members;
-            weakSelf.settingMemberGridView.hasMore = false;
         }
+        // 始终显示「查看更多群成员」入口，便于通过搜索快速查找群成员
+        weakSelf.settingMemberGridView.hasMore = true;
         NSMutableArray<NSString*> *memberUIDs = [NSMutableArray array];
         if(weakSelf.topNMembers && weakSelf.topNMembers.count>0) {
             for (WKChannelMember *member in weakSelf.topNMembers) {
