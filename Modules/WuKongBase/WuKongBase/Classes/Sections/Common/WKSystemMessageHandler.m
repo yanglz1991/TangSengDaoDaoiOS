@@ -308,6 +308,10 @@ bool needRemind = false; // 是否需要提醒
         
         [WKApp.shared notifyChannelAvatarUpdate:[WKChannel channelID:param[@"uid"] channelType:WK_PERSON]];
         
+        // 主动拉取最新的频道信息，触发 channelInfo 更新回调，
+        // 让会话列表 / 群聊 / 联系人列表等界面同步刷新昵称和头像。
+        [[WKSDK shared].channelManager fetchChannelInfo:[[WKChannel alloc] initWith:param[@"uid"] channelType:WK_PERSON]];
+        
     } else if([cmd isEqualToString:WKCMDChannelUpdate]) { // 频道信息更新
         WKLogDebug(@"处理频道信息更新！");
         NSString *channelID = param[@"channel_id"];

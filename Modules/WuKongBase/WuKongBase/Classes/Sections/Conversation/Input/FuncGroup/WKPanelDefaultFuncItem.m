@@ -215,6 +215,10 @@
     return [self getImageNameForBase:@"Conversation/Toolbar/CardNormal"];
 }
 
+// 群聊里禁止分享名片（如需放开请删除这个 support: 方法）
+- (BOOL)support:(id<WKConversationContext>)context {
+    return context.channel.channelType == WK_PERSON;
+}
 
 - (void)onPressed:(UIButton *)btn {
     id<WKConversationContext> conversationContext =  self.inputPanel.conversationContext;

@@ -157,6 +157,10 @@
         if([uid isEqualToString:[WKApp shared].loginInfo.uid]) {
             return nil;
         }
+        // 从群成员列表进入个人详情页不显示「设置备注」入口（如需放开请删除下面 if 语句）
+        if(weakSelf.fromChannel && weakSelf.fromChannel.channelType == WK_GROUP) {
+            return nil;
+        }
         return  @{
             @"height":@(0.0f),
             @"items":@[

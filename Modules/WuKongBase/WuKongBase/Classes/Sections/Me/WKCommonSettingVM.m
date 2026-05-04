@@ -179,7 +179,8 @@
     
     // 模块
     [[WKApp shared] setMethod:@"commonsetting.modules" handler:^id _Nullable(id  _Nonnull param) {
-    
+        // 隐藏「功能模块」入口（如需放开请删除下面这行 return nil）
+        return nil;
         return  @{
             @"height":WKSectionHeight,
             @"items":@[

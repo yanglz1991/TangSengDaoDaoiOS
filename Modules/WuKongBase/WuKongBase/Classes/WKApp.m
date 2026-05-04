@@ -1426,6 +1426,8 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
     // ---------- 我的  ----------
     // PC端
     [self setMethod:WKPOINT_ME_WEB handler:^id _Nullable(id  _Nonnull param) {
+        // 隐藏「我的-网页端」入口（如需放开请删除下面这行 return nil）
+        return nil;
         return [WKMeItem initWithTitle:LLangW(@"网页端",weakSelf) icon:[weakSelf imageName:@"Me/Index/IconPC"] nextSectionHeight:10.0f onClick:^{
             [[WKNavigationManager shared] pushViewController:[WKWebClientInfoVC new] animated:YES];
         }];
