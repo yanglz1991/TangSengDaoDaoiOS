@@ -252,7 +252,9 @@
     
    
     
-    // 在线状态
+    // 去掉群聊-顶部人员列表的在线状态显示（绿点/刚刚/xx分钟）。
+    // 保留原 onlineBadgeView 代码注释，方便后续恢复。
+    /*
     WKOnlineBadgeView *onlineBadgeView = [WKOnlineBadgeView initWithTip:nil];
     [avatarView addSubview:onlineBadgeView];
     onlineBadgeView.hidden = YES;
@@ -278,6 +280,7 @@
     }
    
     onlineBadgeView.lim_top = 0.0f;
+    */
 
     // 名字
      UILabel *nameLbl = [UILabel new];

@@ -301,6 +301,10 @@ bool needRemind = false; // 是否需要提醒
         
         [WKApp.shared notifyChannelAvatarUpdate:[WKChannel channelID:param[@"group_no"] channelType:WK_GROUP]];
         
+        // 主动拉取最新的频道信息，触发 channelInfo 更新回调，
+        // 让会话列表 / 群设置 / 群成员列表等界面同步刷新群名和群头像。
+        [[WKSDK shared].channelManager fetchChannelInfo:[[WKChannel alloc] initWith:param[@"group_no"] channelType:WK_GROUP]];
+        
     } else if([cmd isEqualToString:WKCMDUserAvatarUpdate] && param&&param[@"uid"]) { // 用户头像更新
         WKLogDebug(@"处理用户头像更新！->%@",[WKAvatarUtil getAvatar:param[@"uid"]]);
         

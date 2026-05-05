@@ -127,6 +127,10 @@
             [contentTypes addObjectsFromArray:@[@(WK_IMAGE)]];
         }
         self.limit = 40;
+    } else if ([self.tabType isEqualToString:@"all"] && self.searchInChannel) {
+        // 频道内搜索聊天记录：显式指定文本/文件消息类型，
+        // 避免空 content_type 时 WuKongIM 插件不返回结果（对齐 Android 查找聊天记录行为）。
+        [contentTypes addObjectsFromArray:@[@(WK_TEXT),@(WK_FILE)]];
     }
     if(self.searchInChannel) {
         onlyMessage = true;

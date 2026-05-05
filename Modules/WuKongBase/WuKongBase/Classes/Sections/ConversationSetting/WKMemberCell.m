@@ -51,7 +51,11 @@
     }
     
     
+    // 去掉「查看全部群成员」列表的在线状态显示（绿点/刚刚/xx分钟）。
+    // 保留原 onlineBadgeView 代码注释，方便后续恢复。
     self.onlineBadgeView.hidden = YES;
+    self.onlineBadgeView.tip = nil;
+    /*
     if(online) {
         if(!online.online) {
             if ([[NSDate date] timeIntervalSince1970] - online.lastOffline<60) {
@@ -70,6 +74,7 @@
         self.onlineBadgeView.hidden = YES;
         self.onlineBadgeView.tip = nil;
     }
+    */
     
 }
 

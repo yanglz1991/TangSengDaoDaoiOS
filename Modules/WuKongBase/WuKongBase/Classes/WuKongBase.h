@@ -152,6 +152,7 @@
 #import "WKMessageList.h"
 #import "WKThemeUtil.h"
 #import "WKSearchMediaCell.h"
+#import "WKSearchMessageCell.h"
 
 #define LLang(a) [a Localized:self]
 #define LLangW(a,w) [a Localized:w]
