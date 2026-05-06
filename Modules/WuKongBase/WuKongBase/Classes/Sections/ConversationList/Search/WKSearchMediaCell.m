@@ -74,18 +74,65 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, itemWidth, itemWidth)];
     
     if(item.type && [item.type isEqualToString:@"video"]) {
+        // 优先使用 SmallVideo 模块提供的视频 view
         if([WKApp.shared hasMethod:WKPOINT_SEARCH_ITEM_VIDEO]) {
             UIView *videoView = [WKApp.shared invoke:WKPOINT_SEARCH_ITEM_VIDEO param:@{
                 @"item": item,
             }];
             videoView.frame = view.frame;
             [view addSubview:videoView];
+            return view;
         }
+        // Fallback：本地自渲染（封面缩略图 + 中央播放三角图标 + 点击手势）
+        UIImageView *coverView = [[UIImageView alloc] initWithFrame:view.bounds];
+        if (item.url.length > 0) {
+            [coverView sd_setImageWithURL:[NSURL URLWithString:item.url] placeholderImage:WKApp.shared.config.defaultPlaceholder];
+        } else {
+            coverView.image = WKApp.shared.config.defaultPlaceholder;
+        }
+        coverView.layer.masksToBounds = YES;
+        coverView.clipsToBounds = YES;
+        coverView.contentMode = UIViewContentModeScaleAspectFill;
+        coverView.userInteractionEnabled = YES;
+        coverView.tag = index;
+        UITapGestureRecognizer *vtap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
+        [coverView addGestureRecognizer:vtap];
+        [view addSubview:coverView];
+
+        // 中央播放图标：半透明黑色圆 + 白色三角
+        CGFloat iconSize = MIN(itemWidth, 48.0f) * 0.5f;
+        UIView *iconWrap = [[UIView alloc] initWithFrame:CGRectMake((itemWidth - iconSize)/2.0f,
+                                                                     (itemWidth - iconSize)/2.0f,
+                                                                     iconSize, iconSize)];
+        iconWrap.userInteractionEnabled = NO;
+        iconWrap.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.45f];
+        iconWrap.layer.cornerRadius = iconSize / 2.0f;
+        iconWrap.layer.masksToBounds = YES;
+
+        CAShapeLayer *triangle = [CAShapeLayer layer];
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        CGFloat tw = iconSize * 0.36f;     // 三角宽
+        CGFloat th = iconSize * 0.42f;     // 三角高
+        CGFloat ox = (iconSize - tw)/2.0f + iconSize * 0.05f; // 视觉上略偏右
+        CGFloat oy = (iconSize - th)/2.0f;
+        [path moveToPoint:CGPointMake(ox, oy)];
+        [path addLineToPoint:CGPointMake(ox + tw, oy + th/2.0f)];
+        [path addLineToPoint:CGPointMake(ox, oy + th)];
+        [path closePath];
+        triangle.path = path.CGPath;
+        triangle.fillColor = [UIColor whiteColor].CGColor;
+        [iconWrap.layer addSublayer:triangle];
+
+        [view addSubview:iconWrap];
         return view;
     }
    
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:view.frame];
-    [imgView sd_setImageWithURL:[NSURL URLWithString:item.url] placeholderImage:WKApp.shared.config.defaultPlaceholder];
+    if (item.url.length > 0) {
+        [imgView sd_setImageWithURL:[NSURL URLWithString:item.url] placeholderImage:WKApp.shared.config.defaultPlaceholder];
+    } else {
+        imgView.image = WKApp.shared.config.defaultPlaceholder;
+    }
     imgView.layer.masksToBounds = YES;
     imgView.layer.cornerRadius = 0;
     imgView.clipsToBounds = YES;

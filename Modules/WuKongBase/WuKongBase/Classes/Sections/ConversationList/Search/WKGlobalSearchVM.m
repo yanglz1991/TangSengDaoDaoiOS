@@ -414,8 +414,16 @@
                 if(payload) {
                     contentType = payload[@"type"];
                 }
-                NSURL *url = [[WKApp shared] getImageFullUrl:payload[@"url"]];
-                
+                // 图片取 payload.url；小视频优先取封面 payload.cover，备选 payload.url（仅作为缩略图显示）。
+                NSString *thumbPath = payload[@"url"];
+                if (contentType.intValue == WK_SMALLVIDEO) {
+                    NSString *cover = payload[@"cover"];
+                    if ([cover isKindOfClass:[NSString class]] && cover.length > 0) {
+                        thumbPath = cover;
+                    }
+                }
+                NSURL *url = [[WKApp shared] getImageFullUrl:thumbPath];
+
                 WKSearchMediaItem *item = [[WKSearchMediaItem alloc] init];
                 item.url = url.absoluteString;
                 if(contentType.intValue == WK_SMALLVIDEO) {
@@ -470,10 +478,8 @@
         return [NSSet setWithObjects:@(WK_FILE), nil];
     }
     if ([self.tabType isEqualToString:@"media"]) {
-        if ([WKApp.shared hasMethod:WKPOINT_SEARCH_ITEM_VIDEO]) {
-            return [NSSet setWithObjects:@(WK_IMAGE), @(WK_SMALLVIDEO), nil];
-        }
-        return [NSSet setWithObjects:@(WK_IMAGE), nil];
+        // 始终包含图片和小视频；小视频的点击跳转逻辑在本地处理，不依赖 SmallVideo 模块注册 WKPOINT_SEARCH_ITEM_VIDEO。
+        return [NSSet setWithObjects:@(WK_IMAGE), @(WK_SMALLVIDEO), nil];
     }
     // 聊天 tab：仅在文本消息中按关键字搜索（与 Android 端行为一致）
     return [NSSet setWithObjects:@(WK_TEXT), nil];
@@ -555,20 +561,30 @@
             cursor = msg.orderSeq; // 推进游标
             if (msg.isDeleted) continue;
             if (![targetTypes containsObject:@(msg.contentType)]) continue;
-            // 媒体 tab：过滤掉 url 为空的图片/视频消息，避免点击后 [NSURL URLWithString:nil] 闪退。
+            // 媒体 tab：过滤掉可显示 url 为空的图片/视频消息，避免点击后 [NSURL URLWithString:nil] 闪退。
+            // 图片看 payload.url；小视频看 payload.cover（封面，cover 为空时也接受 url）。
             if ([self.tabType isEqualToString:@"media"]) {
-                NSString *imgUrl = nil;
+                NSString *displayUrl = nil;
                 if (msg.contentData) {
                     NSError *jsonErr = nil;
                     id parsedPayload = [NSJSONSerialization JSONObjectWithData:msg.contentData options:0 error:&jsonErr];
                     if (!jsonErr && [parsedPayload isKindOfClass:[NSDictionary class]]) {
-                        id u = ((NSDictionary *)parsedPayload)[@"url"];
-                        if ([u isKindOfClass:[NSString class]]) {
-                            imgUrl = (NSString *)u;
+                        NSDictionary *p = (NSDictionary *)parsedPayload;
+                        if (msg.contentType == WK_SMALLVIDEO) {
+                            id c = p[@"cover"];
+                            if ([c isKindOfClass:[NSString class]] && ((NSString *)c).length > 0) {
+                                displayUrl = (NSString *)c;
+                            } else {
+                                id u = p[@"url"];
+                                if ([u isKindOfClass:[NSString class]]) displayUrl = (NSString *)u;
+                            }
+                        } else {
+                            id u = p[@"url"];
+                            if ([u isKindOfClass:[NSString class]]) displayUrl = (NSString *)u;
                         }
                     }
                 }
-                if (imgUrl.length == 0) continue;
+                if (displayUrl.length == 0) continue;
             }
             if (needKeyword) {
                 NSString *digest = nil;
