@@ -8,6 +8,7 @@
 #import "WKMeAvatarVC.h"
 #import "WKActionSheetView2.h"
 #import "WKMediaPickerController.h"
+#import "WKPhotoBrowser.h"
 #import "TOCropViewController.h"
 @interface WKMeAvatarVC ()<TOCropViewControllerDelegate>
 
@@ -68,9 +69,15 @@
         [weakSelf cameraPressed];
     }]];
     [actionSheet addItem:[WKActionSheetButtonItem2 initWithTitle:LLang(@"从手机相册选择") onClick:^{
-        [[WKPhotoService shared] getPhotoOneFromLibrary:^(UIImage * _Nonnull image) {
-            [weakSelf cropAvatar:image];
-        }];
+        // 与聊天窗口使用同一套选图器，避免 iOS 14+ 「有限访问」权限下只能看到部分照片的问题
+        [[WKPhotoBrowser shared] showPhotoLibraryWithSender:weakSelf selectCompressImageBlock:^(NSArray<NSData *> * _Nonnull images, NSArray<PHAsset *> * _Nonnull assets, BOOL isOriginal) {
+            if(images && images.count > 0) {
+                UIImage *image = [UIImage imageWithData:images.firstObject];
+                if(image) {
+                    [weakSelf cropAvatar:image];
+                }
+            }
+        } maxSelectCount:1 allowSelectVideo:NO];
     }]];
     [actionSheet addItem:[WKActionSheetButtonItem2 initWithTitle:LLang(@"保存图片") onClick:^{
         UIImageWriteToSavedPhotosAlbum(self.avatarImgView.avatarImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
