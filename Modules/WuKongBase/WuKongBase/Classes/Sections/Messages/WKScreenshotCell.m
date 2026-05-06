@@ -17,12 +17,8 @@
 @implementation WKScreenshotCell
 
 + (CGSize)sizeForMessage:(WKMessageModel *)model {
-    WKScreenshotContent *content = (WKScreenshotContent*)model.content;
-    CGSize contentSize = CGSizeMake(0.0f, 0.0f);
-    if(content.tip) {
-        contentSize =  [[self class] getTextSize:content.tip maxWidth:WKScreenWidth - 20];
-    }
-    return CGSizeMake(contentSize.width+25.0f, contentSize.height+20.0f);
+    // 已禁用「在聊天中截屏了」通知：返回零尺寸，使历史该类型消息不再占用布局。
+    return CGSizeZero;
 }
 
 
@@ -46,11 +42,10 @@
 - (void)refresh:(WKMessageModel *)model {
     [super refresh:model];
     self.messageModel = model;
-    WKScreenshotContent *content = (WKScreenshotContent*)model.content;
-    
-    self.tipTextLbl.text = content.tip;
-    
-    [self.tipTextLbl setBackgroundColor:[WKApp shared].config.cellBackgroundColor];
+    // 已禁用「在聊天中截屏了」通知：隐藏提示文本，不再在消息列表里呈现。
+    self.tipTextLbl.text = @"";
+    self.tipTextLbl.hidden = YES;
+    [self.tipTextLbl setBackgroundColor:[UIColor clearColor]];
 }
 
 

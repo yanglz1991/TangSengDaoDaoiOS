@@ -42,7 +42,8 @@
 }
 
 - (NSString *)conversationDigest {
-    return self.tip;
+    // 已禁用「在聊天中截屏了」通知：会话列表里不再展示该 digest
+    return @"";
 }
 
 + (NSNumber*)contentType {

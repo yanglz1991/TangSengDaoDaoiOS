@@ -1111,10 +1111,10 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
     
 
     
-    // more
-    [self setMethod:WKPOINT_CATEGORY_PANELFUNCITEM_MORE handler:^id _Nullable(id  _Nonnull param) {
-        return [[WKPanelMoreFuncItem alloc] init];
-    } category:WKPOINT_CATEGORY_PANELFUNCITEM];
+    // more（已隐藏：聊天底部功能组右侧「更多」按钮不再显示）
+//    [self setMethod:WKPOINT_CATEGORY_PANELFUNCITEM_MORE handler:^id _Nullable(id  _Nonnull param) {
+//        return [[WKPanelMoreFuncItem alloc] init];
+//    } category:WKPOINT_CATEGORY_PANELFUNCITEM];
     
     
     // emoji正文

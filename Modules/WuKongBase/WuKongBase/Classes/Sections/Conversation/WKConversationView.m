@@ -131,8 +131,8 @@
         [self.input becomeFirstResponder]; // 弹出键盘
         self.keepKeyboard = false;
     }
-    // 截屏通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidTakeScreenshot) name:UIApplicationUserDidTakeScreenshotNotification object:nil];
+    // 截屏通知（已禁用：不再监听和发送「在聊天中截屏了」通知）
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidTakeScreenshot) name:UIApplicationUserDidTakeScreenshotNotification object:nil];
     if(self.inputParentView != self) {
         [self.inputParentView addSubview:self.input];
     }
@@ -299,7 +299,8 @@
 
 // 用户截屏
 -(void) userDidTakeScreenshot {
-    [self.conversationContext sendMessage:WKScreenshotContent.new];
+    // 已禁用「在聊天中截屏了」通知，不再向服务器发送截屏消息
+//    [self.conversationContext sendMessage:WKScreenshotContent.new];
 }
 
 -(void) requestSetUnreadIfNeed {
