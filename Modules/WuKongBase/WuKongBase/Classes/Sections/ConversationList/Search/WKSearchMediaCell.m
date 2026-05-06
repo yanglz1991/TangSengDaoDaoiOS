@@ -105,14 +105,25 @@
     UIView *view = tapGest.view;
     NSInteger index = view.tag;
     
-    WKSearchMediaItem *item =  self.mediaModel.items[index];
+    if (index < 0 || index >= self.mediaModel.items.count) return;
+    WKSearchMediaItem *item = self.mediaModel.items[index];
+
+    // 优先走 onClick 回调（上层可把点击行为改为跳转到聊天窗口），避免直接弹 WKImageBrowser。
+    if (item.onClick) {
+        item.onClick();
+        return;
+    }
+
+    if (item.url.length == 0) return; // 防御：空 URL 不弹预览，避免 [NSURL URLWithString:nil] 崩溃
+    NSURL *imageURL = [NSURL URLWithString:item.url];
+    if (imageURL == nil) return;
     
     WKImageBrowser *imageBrowser = [[WKImageBrowser alloc] init];
     imageBrowser.toolViewHandlers = @[];
     imageBrowser.webImageMediator = [WKDefaultWebImageMediator new];
     
     YBIBImageData *data = [YBIBImageData new];
-    data.imageURL = [NSURL URLWithString:item.url];
+    data.imageURL = imageURL;
     
     imageBrowser.dataSourceArray = @[data];
     

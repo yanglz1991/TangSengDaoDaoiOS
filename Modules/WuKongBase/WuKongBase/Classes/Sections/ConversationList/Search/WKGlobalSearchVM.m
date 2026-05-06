@@ -29,7 +29,7 @@
 @property(nonatomic,assign) BOOL pullup; // 是否pullup中
 @property(nonatomic,assign) BOOL hasMore;// 是否有更多数据
 @property(nonatomic,copy) NSString *tabType;
-
+@property(nonatomic,assign) uint32_t localOldestOrderSeq; // 频道内本地搜索的分页游标(0 表示从最新开始)
 
 @end
 
@@ -59,7 +59,7 @@
     self.page = 1;
     self.pullup = false;
     self.hasMore = false;
-
+    self.localOldestOrderSeq = 0;
 }
 
 - (BOOL)searchInChannel {
@@ -67,6 +67,14 @@
         return false;
     }
     return  true;
+}
+
+- (BOOL)shouldShowNoDataText {
+    // 频道内聊天 tab 未输入关键字时，列表保持空白，不显示"暂无数据"提示
+    if (self.searchInChannel && [self.tabType isEqualToString:@"all"] && self.keyword.length == 0) {
+        return NO;
+    }
+    return YES;
 }
 
 -(void) changeKeyword:(NSString*)keyword {
@@ -111,7 +119,14 @@
 
 -(void) search:(void(^)(NSError * _Nullable))complete {
     __weak typeof(self) weakSelf = self;
-    
+
+    // 频道内查找聊天记录（all/media/file 三个 tab）改为基于本地 SDK WKMessageDB 数据库查询，
+    // 避免依赖未启用的 WuKongIM 服务端搜索插件 /v1/search/global。
+    if(self.searchInChannel) {
+        [self localSearchInChannel:complete];
+        return;
+    }
+
     NSMutableArray<NSNumber*>  *contentTypes = [NSMutableArray array];
     BOOL onlyMessage = false;
     self.limit = 20;
@@ -127,13 +142,6 @@
             [contentTypes addObjectsFromArray:@[@(WK_IMAGE)]];
         }
         self.limit = 40;
-    } else if ([self.tabType isEqualToString:@"all"] && self.searchInChannel) {
-        // 频道内搜索聊天记录：显式指定文本/文件消息类型，
-        // 避免空 content_type 时 WuKongIM 插件不返回结果（对齐 Android 查找聊天记录行为）。
-        [contentTypes addObjectsFromArray:@[@(WK_TEXT),@(WK_FILE)]];
-    }
-    if(self.searchInChannel) {
-        onlyMessage = true;
     }
     
     NSString *keyword = self.keyword;
@@ -416,6 +424,24 @@
                 NSMutableDictionary *extra = [NSMutableDictionary dictionary];
                 extra[@"message"] = message;
                 item.extra = extra;
+
+                // 改为点击图片后跳转到聊天窗口并定位到该消息（替代直接弹 WKImageBrowser），
+                // 规避 YBImageBrowser/WKImageBrowser 内部路径带来的闪退风险，体验也与其他 tab 一致。
+                __block NSString *mediaChannelId = @"";
+                __block NSNumber *mediaChannelType = @(0);
+                if (message[@"channel"] && message[@"channel"] != [NSNull null]) {
+                    mediaChannelId = message[@"channel"][@"channel_id"] ?: @"";
+                    mediaChannelType = message[@"channel"][@"channel_type"] ?: @(0);
+                }
+                NSNumber *mediaMessageSeq = message[@"message_seq"] ?: @(0);
+                item.onClick = ^{
+                    if (mediaChannelId.length == 0) return;
+                    WKConversationVC *vc = [[WKConversationVC alloc] init];
+                    vc.channel = [WKChannel channelID:mediaChannelId channelType:mediaChannelType.integerValue];
+                    vc.locationAtOrderSeq = [WKSDK.shared.chatManager getOrderSeq:mediaMessageSeq.unsignedLongLongValue];
+                    [[WKNavigationManager shared] pushViewController:vc animated:YES];
+                };
+
                 [items addObject:item];
             }
             
@@ -436,6 +462,157 @@
     return items;
 }
 
+
+// MARK: - 频道内本地搜索（基于 WKMessageDB 本地数据库）
+
+- (NSSet<NSNumber *> *)targetContentTypesForLocalSearch {
+    if ([self.tabType isEqualToString:@"file"]) {
+        return [NSSet setWithObjects:@(WK_FILE), nil];
+    }
+    if ([self.tabType isEqualToString:@"media"]) {
+        if ([WKApp.shared hasMethod:WKPOINT_SEARCH_ITEM_VIDEO]) {
+            return [NSSet setWithObjects:@(WK_IMAGE), @(WK_SMALLVIDEO), nil];
+        }
+        return [NSSet setWithObjects:@(WK_IMAGE), nil];
+    }
+    // 聊天 tab：仅在文本消息中按关键字搜索（与 Android 端行为一致）
+    return [NSSet setWithObjects:@(WK_TEXT), nil];
+}
+
+- (NSDictionary *)convertWKMessageToDict:(WKMessage *)msg {
+    NSMutableDictionary *channelDict = [NSMutableDictionary dictionary];
+    if (msg.channel) {
+        channelDict[@"channel_id"] = msg.channel.channelId ?: @"";
+        channelDict[@"channel_type"] = @(msg.channel.channelType);
+    }
+
+    NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+    payload[@"type"] = @(msg.contentType);
+    if (msg.contentData) {
+        NSError *err = nil;
+        id parsed = [NSJSONSerialization JSONObjectWithData:msg.contentData options:0 error:&err];
+        if (!err && [parsed isKindOfClass:[NSDictionary class]]) {
+            [payload addEntriesFromDictionary:(NSDictionary *)parsed];
+            // type 字段以 SDK contentType 为准，避免 payload 中 type 缺失导致 UI 解析失败
+            payload[@"type"] = @(msg.contentType);
+        }
+    }
+
+    return @{
+        @"channel": channelDict,
+        @"from_uid": msg.fromUid ?: @"",
+        @"timestamp": @(msg.timestamp),
+        @"message_seq": @(msg.messageSeq),
+        // 额外补充字段，供下游（如小视频点击播放）凭这些唯一标识反查本地 WKMessage
+        @"client_msg_no": msg.clientMsgNo ?: @"",
+        @"message_id": @(msg.messageId),
+        @"order_seq": @(msg.orderSeq),
+        @"payload": payload,
+    };
+}
+
+- (void)localSearchInChannel:(void (^)(NSError * _Nullable))complete {
+    self.limit = [self.tabType isEqualToString:@"media"] ? 40 : 20;
+    NSInteger pageLimit = self.limit;
+
+    NSString *keyword = self.keyword ?: @"";
+    if ([self.tabType isEqualToString:@"media"]) {
+        keyword = @""; // 图片/视频不支持关键字过滤
+    }
+    BOOL needKeyword = keyword.length > 0;
+
+    // 聊天 tab：未输入关键字时不查询，列表保持空白（避免默认列出频道全部文本消息）。
+    if ([self.tabType isEqualToString:@"all"] && !needKeyword) {
+        self.searchResult = nil;
+        self.hasMore = NO;
+        self.localOldestOrderSeq = 0;
+        if (complete) complete(nil);
+        [self reloadData];
+        return;
+    }
+
+    NSSet<NSNumber *> *targetTypes = [self targetContentTypesForLocalSearch];
+
+    NSMutableArray<NSDictionary *> *result = [NSMutableArray array];
+    uint32_t cursor = self.localOldestOrderSeq; // 0 表示从最新开始
+    BOOL reachedEnd = NO;
+    const int fetchBatch = 80;
+    int safety = 0;
+    while (result.count < (NSUInteger)pageLimit && safety++ < 30) {
+        // 拉取 cursor 之前的更早一批消息（pullDown = 向旧的方向拉取）。
+        // 注意：传 0 给 startOrderSeq 时 SDK 会从最新开始返回。
+        NSArray<WKMessage *> *batch = [[WKMessageDB shared] getMessages:self.channel
+                                                          startOrderSeq:cursor
+                                                            endOrderSeq:0
+                                                                  limit:fetchBatch
+                                                               pullMode:WKPullModeDown];
+        if (!batch || batch.count == 0) {
+            reachedEnd = YES;
+            break;
+        }
+        for (WKMessage *msg in batch) {
+            if (msg == nil) continue;
+            cursor = msg.orderSeq; // 推进游标
+            if (msg.isDeleted) continue;
+            if (![targetTypes containsObject:@(msg.contentType)]) continue;
+            // 媒体 tab：过滤掉 url 为空的图片/视频消息，避免点击后 [NSURL URLWithString:nil] 闪退。
+            if ([self.tabType isEqualToString:@"media"]) {
+                NSString *imgUrl = nil;
+                if (msg.contentData) {
+                    NSError *jsonErr = nil;
+                    id parsedPayload = [NSJSONSerialization JSONObjectWithData:msg.contentData options:0 error:&jsonErr];
+                    if (!jsonErr && [parsedPayload isKindOfClass:[NSDictionary class]]) {
+                        id u = ((NSDictionary *)parsedPayload)[@"url"];
+                        if ([u isKindOfClass:[NSString class]]) {
+                            imgUrl = (NSString *)u;
+                        }
+                    }
+                }
+                if (imgUrl.length == 0) continue;
+            }
+            if (needKeyword) {
+                NSString *digest = nil;
+                if (msg.content && [msg.content respondsToSelector:@selector(conversationDigest)]) {
+                    digest = [msg.content conversationDigest];
+                }
+                if (digest.length == 0) {
+                    // 解码 fallback：直接在原始 JSON 串里检索
+                    if (msg.contentData) {
+                        digest = [[NSString alloc] initWithData:msg.contentData encoding:NSUTF8StringEncoding];
+                    }
+                }
+                if (!digest || [digest rangeOfString:keyword options:NSCaseInsensitiveSearch].location == NSNotFound) {
+                    continue;
+                }
+            }
+            [result addObject:[self convertWKMessageToDict:msg]];
+            if (result.count >= (NSUInteger)pageLimit) break;
+        }
+        if (batch.count < fetchBatch) {
+            reachedEnd = YES;
+            break;
+        }
+    }
+    self.localOldestOrderSeq = cursor;
+    self.hasMore = !reachedEnd;
+
+    NSDictionary *resultDict = @{ @"messages": result };
+    if (self.pullup && self.searchResult) {
+        NSMutableDictionary *merged = [NSMutableDictionary dictionaryWithDictionary:self.searchResult];
+        NSArray *existing = self.searchResult[@"messages"];
+        NSMutableArray *combined = [NSMutableArray arrayWithArray:existing ?: @[]];
+        [combined addObjectsFromArray:result];
+        merged[@"messages"] = combined;
+        self.searchResult = merged;
+    } else {
+        self.searchResult = resultDict;
+    }
+
+    if (complete) {
+        complete(nil);
+    }
+    [self reloadData];
+}
 
 -(void) requestSearch:(NSDictionary*)param callback:(void (^)(NSError * _Nullable error,NSDictionary * _Nullable))callback{
     

@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 是否在频道内搜索
 -(BOOL) searchInChannel;
 
+/// 当前空数据状态下是否需要显示"暂无数据"提示文字。
+/// 用于：频道内聊天 tab 未输入关键字时，列表保持完全空白。
+-(BOOL) shouldShowNoDataText;
+
 @end
 
 NS_ASSUME_NONNULL_END

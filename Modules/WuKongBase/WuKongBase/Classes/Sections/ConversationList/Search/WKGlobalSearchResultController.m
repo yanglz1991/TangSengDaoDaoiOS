@@ -172,6 +172,15 @@
 //    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 
+// 频道内聊天 tab 未输入关键字时，列表保持空白，不显示"暂无数据"四字。
+- (NSString *)noDataText {
+    if (self.vm && ![self.vm shouldShowNoDataText]) {
+        return @"";
+    }
+    // 与 WKBaseTableVC 默认文案保持一致
+    return LLangC(@"暂无数据", [WKBaseTableVC class]);
+}
+
 #pragma mark -- WKChannelManagerDelegate
 
 - (void)channelInfoUpdate:(WKChannelInfo *)channelInfo {
