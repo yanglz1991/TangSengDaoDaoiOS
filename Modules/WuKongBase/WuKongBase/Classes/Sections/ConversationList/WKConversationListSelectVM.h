@@ -8,16 +8,26 @@
 #import <WuKongBase/WuKongBase.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSInteger, WKConversationListSelectTab) {
+    WKConversationListSelectTabRecent = 0, // 最近聊天
+    WKConversationListSelectTabGroup  = 1, // 群组
+    WKConversationListSelectTabFriend = 2, // 好友
+};
+
 @class WKConversationListSelectVM;
 @protocol WKConversationListSelectVMDelegate <NSObject>
 
 @optional
 
 
-/// 被选中的最近会话
-/// @param vm <#vm description#>
-/// @param channels <#channels description#>
+/// 被选中的最近会话(单选/多选最终确认时回调)
+/// @param vm vm
+/// @param channels channels
 -(void) conversationListSelectVM:(WKConversationListSelectVM*)vm didSelected:(NSArray<WKChannel*>*)channels;
+
+/// 多选模式下,选中集合发生变化(用于 VC 实时更新底部按钮文案)
+-(void) conversationListSelectVM:(WKConversationListSelectVM*)vm selectedChanged:(NSArray<WKChannel*>*)channels;
 
 @end
 
@@ -27,6 +37,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否开启多选
 @property(nonatomic,assign) BOOL multiple;
+
+/// 当前 Tab(默认 WKConversationListSelectTabRecent)
+@property(nonatomic,assign,readonly) WKConversationListSelectTab currentTab;
+
+/// 当前关键字(为空表示无搜索)
+@property(nonatomic,copy) NSString *keyword;
+
+/// 切换 Tab,内部触发刷新
+-(void) switchTab:(WKConversationListSelectTab)tab;
+
+/// 获取已选频道列表
+-(NSArray<WKChannel*>*) selectedChannelsArray;
+
+/// 通过外部触发"完成"动作(多选场景下使用)
+-(void) commitSelection;
 
 @end
 

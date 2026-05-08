@@ -153,6 +153,10 @@
         _checkBox.lineWidth = 1.0f;
     //    self.checkBox.tintColor = [UIColor grayColor];
         _checkBox.delegate = self;
+        // 选中态完全由 VM 通过 cellModel.selected 驱动,禁用 checkBox 自身交互,
+        // 让点击穿透到整行,走 didSelectRowAtIndexPath -> onClick -> toggleChannel,
+        // 否则点 checkBox 时 selectedChannels 不会更新,底部数量与跨 Tab 选中状态会失真。
+        _checkBox.userInteractionEnabled = NO;
     }
     return _checkBox;
 }

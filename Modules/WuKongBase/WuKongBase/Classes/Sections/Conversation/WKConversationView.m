@@ -772,32 +772,31 @@
 -(void) multipActionForward {
     WKConversationListSelectVC *vc = [WKConversationListSelectVC new];
     vc.title = LLang(@"选择一个聊天");
+    vc.viewModel.multiple = YES;
     NSArray *selectedMessages = [self.messageListView getSelectedMessages];
     __weak typeof(self) weakSelf = self;
-    [vc setOnSelect:^(WKChannel * _Nonnull channel) {
+    [vc setOnSelectChannels:^(NSArray<WKChannel *> * _Nonnull channels) {
         [[WKNavigationManager shared] popToViewController:weakSelf.lim_viewController animated:YES];
-        for (WKMessageModel *messageModel  in selectedMessages) {
-            if([[WKApp shared] allowMessageForward:messageModel.contentType]) { // 如果允许转发则直接转发
-                if([weakSelf.channel isEqual:channel]) {
-                    [weakSelf.conversationContext forwardMessage:messageModel.content];
-                }else{
-                    [[WKSDK shared].chatManager forwardMessage:messageModel.content channel:channel];
+        for (WKChannel *channel in channels) {
+            for (WKMessageModel *messageModel  in selectedMessages) {
+                if([[WKApp shared] allowMessageForward:messageModel.contentType]) { // 如果允许转发则直接转发
+                    if([weakSelf.channel isEqual:channel]) {
+                        [weakSelf.conversationContext forwardMessage:messageModel.content];
+                    }else{
+                        [[WKSDK shared].chatManager forwardMessage:messageModel.content channel:channel];
+                    }
+                }else{ // 如果不允许转发，则将变成文本消息转发
+                    WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[messageModel.content conversationDigest]];
+                    if([weakSelf.channel isEqual:channel]) {
+                        [weakSelf.conversationContext forwardMessage:textContent];
+                    }else{
+                        [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
+                    }
                 }
-                
-            }else{ // 如果不允许转发，则将变成文本消息转发
-                WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[messageModel.content conversationDigest]];
-                if([weakSelf.channel isEqual:channel]) {
-                    [weakSelf.conversationContext forwardMessage:textContent];
-                }else{
-                    [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
-                }
-                
             }
-           
         }
         [[WKNavigationManager shared].topViewController.view showHUDWithHide:LLang(@"发送成功")];
         [weakSelf setMultipleOn:NO];
-        
     }];
     [[WKNavigationManager shared] pushViewController:vc animated:YES];
 }
@@ -807,10 +806,11 @@
     __weak typeof(self) weakSelf = self;
     WKConversationListSelectVC *vc = [WKConversationListSelectVC new];
     vc.title = LLang(@"选择一个聊天");
+    vc.viewModel.multiple = YES;
     NSArray *selectedMessages = [self.messageListView getSelectedMessages];
-    [vc setOnSelect:^(WKChannel * _Nonnull channel) {
+    [vc setOnSelectChannels:^(NSArray<WKChannel *> * _Nonnull channels) {
         [[WKNavigationManager shared] popToViewController:weakSelf.lim_viewController animated:YES];
-        
+
         NSMutableArray *msgs = [NSMutableArray array];
         NSMutableArray<NSDictionary*> *userDicts = [NSMutableArray array];
         for (WKMessageModel *messageModel  in selectedMessages) {
@@ -836,17 +836,18 @@
             }
             return NSOrderedDescending;
         }];
-        
-        WKMergeForwardContent *content = [WKMergeForwardContent msgs:msgs users:userDicts channelType:weakSelf.channel.channelType];
-        if([weakSelf.channel isEqual:channel]) {
-            [weakSelf.conversationContext sendMessage:content];
-        }else {
-            [[WKSDK shared].chatManager sendMessage:content channel:channel];
+
+        for (WKChannel *channel in channels) {
+            WKMergeForwardContent *content = [WKMergeForwardContent msgs:msgs users:userDicts channelType:weakSelf.channel.channelType];
+            if([weakSelf.channel isEqual:channel]) {
+                [weakSelf.conversationContext sendMessage:content];
+            }else {
+                [[WKSDK shared].chatManager sendMessage:content channel:channel];
+            }
         }
-       
+
         [[WKNavigationManager shared].topViewController.view showHUDWithHide:LLang(@"发送成功")];
         [weakSelf setMultipleOn:NO];
-        
     }];
     [[WKNavigationManager shared] pushViewController:vc animated:YES];
 }

@@ -11,6 +11,8 @@
 #import "WKLanguageVC.h"
 #import "NSString+WKLocalized.h"
 #import "WKModuleVC.h"
+#import "WKSecureChannelMenu.h"
+#import "WKSecureChannelManager.h"
 
 @interface WKCommonSettingVM ()
 
@@ -27,7 +29,13 @@
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             [self registerItems];
+            [WKSecureChannelMenu registerSecureChannelMenu];
         });
+        // 每次进入"通用"页都刷新一次加密通道配置
+        __weak typeof(self) weakSelf = self;
+        [[WKSecureChannelManager shared] refreshConfig:^(BOOL enabled, NSString * _Nonnull name) {
+            [weakSelf reloadData];
+        }];
     }
     return self;
 }

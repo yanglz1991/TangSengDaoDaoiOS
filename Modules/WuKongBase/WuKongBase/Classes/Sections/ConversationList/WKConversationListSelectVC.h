@@ -13,9 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 选中
+ 单选回调(兼容原有单选场景)
  */
 @property(nonatomic,copy) void(^onSelect)(WKChannel*channel);
+
+/**
+ 多选确认回调:仅当 viewModel.multiple == YES 时,从底部"确定"按钮触发
+ */
+@property(nonatomic,copy) void(^onSelectChannels)(NSArray<WKChannel*>*channels);
 
 @end
 

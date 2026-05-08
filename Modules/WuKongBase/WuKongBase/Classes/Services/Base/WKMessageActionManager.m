@@ -19,21 +19,20 @@ static WKMessageActionManager *_instance;
 -(void) forwardMessages:(NSArray<WKMessage*>*)messages{
     WKConversationListSelectVC *vc = [WKConversationListSelectVC new];
     vc.title = LLang(@"选择一个聊天");
-    [vc setOnSelect:^(WKChannel * _Nonnull channel) {
+    vc.viewModel.multiple = YES;
+    [vc setOnSelectChannels:^(NSArray<WKChannel *> * _Nonnull channels) {
         [[WKNavigationManager shared] popViewControllerAnimated:YES];
-//        [[WKNavigationManager shared] popToViewControllerClass:WKConversationVC.class animated:YES];
-        for (WKMessage *message  in messages) {
-            if([[WKApp shared] allowMessageForward:message.contentType]) { // 如果允许转发则直接转发
-                [[WKSDK shared].chatManager forwardMessage:message.content channel:channel];
-                
-            }else{ // 如果不允许转发，则将变成文本消息转发
-                WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[message.content conversationDigest]];
-                [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
+        for (WKChannel *channel in channels) {
+            for (WKMessage *message in messages) {
+                if([[WKApp shared] allowMessageForward:message.contentType]) { // 如果允许转发则直接转发
+                    [[WKSDK shared].chatManager forwardMessage:message.content channel:channel];
+                }else{ // 如果不允许转发，则将变成文本消息转发
+                    WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[message.content conversationDigest]];
+                    [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
+                }
             }
-           
         }
         [[WKNavigationManager shared].topViewController.view showHUDWithHide:LLang(@"发送成功")];
-        
     }];
     [[WKNavigationManager shared] pushViewController:vc animated:YES];
 }
@@ -41,22 +40,22 @@ static WKMessageActionManager *_instance;
 -(void) forwardContent:(WKMessageContent*)messageContent complete:(void(^)(void))complete{
     WKConversationListSelectVC *vc = [WKConversationListSelectVC new];
     vc.title = LLang(@"选择一个聊天");
-    [vc setOnSelect:^(WKChannel * _Nonnull channel) {
+    vc.viewModel.multiple = YES;
+    [vc setOnSelectChannels:^(NSArray<WKChannel *> * _Nonnull channels) {
         if(complete) {
             complete();
         }else {
             [[WKNavigationManager shared] popViewControllerAnimated:YES];
         }
-       
-        if([[WKApp shared] allowMessageForward:messageContent.realContentType]) { // 如果允许转发则直接转发
-            [[WKSDK shared].chatManager forwardMessage:messageContent channel:channel];
-            
-        }else{ // 如果不允许转发，则将变成文本消息转发
-            WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[messageContent conversationDigest]];
-            [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
+        for (WKChannel *channel in channels) {
+            if([[WKApp shared] allowMessageForward:messageContent.realContentType]) { // 如果允许转发则直接转发
+                [[WKSDK shared].chatManager forwardMessage:messageContent channel:channel];
+            }else{ // 如果不允许转发，则将变成文本消息转发
+                WKTextContent *textContent = [[WKTextContent alloc] initWithContent:[messageContent conversationDigest]];
+                [[WKSDK shared].chatManager forwardMessage:textContent channel:channel];
+            }
         }
         [[WKNavigationManager shared].topViewController.view showHUDWithHide:LLang(@"发送成功")];
-        
     }];
     [[WKNavigationManager shared] pushViewController:vc animated:YES];
 }

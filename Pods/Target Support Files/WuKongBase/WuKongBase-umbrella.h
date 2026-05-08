@@ -273,6 +273,8 @@
 #import "WKInlineQueryManager.h"
 #import "WKInlineQueryResult.h"
 #import "WKResultPanel.h"
+#import "WKSecureChannelManager.h"
+#import "WKSecureChannelMenu.h"
 #import "WKConversationPasswordVC.h"
 #import "WKConversationPasswordVM.h"
 #import "WKScreenPasswordSettingVC.h"
