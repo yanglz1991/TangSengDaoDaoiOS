@@ -635,16 +635,25 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
     }else {
           [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     }
-//        [[[WKSDK shared] connectionManager] disconnect:YES];
-    
-    // 需要下面这代码回到桌面后台进程才会保持
+
+    // 申请后台任务，给 IM SDK 一段宽限时间把红点上报、断开 socket 等收尾操作做完。
+    // 系统在临近过期时调用 expirationHandler，这时仍可继续短暂跑代码。
     _bgTaskToken = [application beginBackgroundTaskWithExpirationHandler:^{
-        // 取消后台任务
-        [application endBackgroundTask:_bgTaskToken];
-        _bgTaskToken = UIBackgroundTaskInvalid;
-        [[[WKSDK shared] connectionManager] disconnect:YES];
+        if(_bgTaskToken != UIBackgroundTaskInvalid) {
+            [application endBackgroundTask:_bgTaskToken];
+            _bgTaskToken = UIBackgroundTaskInvalid;
+        }
     }];
-    
+
+    // 进入后台时立即主动断开 IM 长连接：
+    // 1) 让 IM 服务器尽快把本设备标记为离线，从下一条消息起走 APNs 离线推送 webhook，
+    //    避免“消息直推 socket 但 socket 已被系统冻结”导致的消息黑洞；
+    // 2) 不依赖系统在 expirationHandler 里再去执行 disconnect —— 那时进程随时可能被 suspend，
+    //    TCP FIN 不一定能成功送到，长时间挂机后客户端就一直收不到推送。
+    if([WKApp shared].isLogined) {
+        [[[WKSDK shared] connectionManager] disconnect:YES];
+    }
+
     [WKApp shared].loginInfo.extra[@"enter_background_time"] = @([[NSDate date] timeIntervalSince1970]);
     
 //

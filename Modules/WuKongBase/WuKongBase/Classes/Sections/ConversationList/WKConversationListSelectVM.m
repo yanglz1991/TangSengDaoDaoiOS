@@ -155,6 +155,73 @@
     }
 }
 
+#pragma mark - 当前 Tab 全选 / 取消全选
+
+// 仅统计可被选择(非禁言、且 channel 非空)的项
+- (NSArray<WKChannel*>*)currentTabSelectableChannels {
+    NSMutableArray<WKChannel*> *result = [NSMutableArray array];
+    for (WKConversationListSelectItem *it in [self filteredItems]) {
+        if (!it.channel) continue;
+        if (it.forbidden) continue;
+        [result addObject:it.channel];
+    }
+    return result;
+}
+
+- (NSInteger)currentTabSelectableCount {
+    return [self currentTabSelectableChannels].count;
+}
+
+- (NSInteger)currentTabSelectedCount {
+    NSInteger n = 0;
+    for (WKChannel *ch in [self currentTabSelectableChannels]) {
+        if ([self isChannelSelected:ch]) n++;
+    }
+    return n;
+}
+
+- (BOOL)isCurrentTabAllSelected {
+    NSArray<WKChannel*> *list = [self currentTabSelectableChannels];
+    if (list.count == 0) return NO;
+    for (WKChannel *ch in list) {
+        if (![self isChannelSelected:ch]) return NO;
+    }
+    return YES;
+}
+
+- (void)toggleSelectAllCurrentTab {
+    NSArray<WKChannel*> *list = [self currentTabSelectableChannels];
+    if (list.count == 0) return;
+    BOOL allSelected = [self isCurrentTabAllSelected];
+    if (allSelected) {
+        // 移除当前可见列表里的所有 channel
+        NSMutableArray<WKChannel*> *remaining = [NSMutableArray array];
+        for (WKChannel *sc in self.selectedChannels) {
+            BOOL hit = NO;
+            for (WKChannel *ch in list) {
+                if (sc.channelType == ch.channelType && [sc.channelId isEqualToString:ch.channelId]) {
+                    hit = YES;
+                    break;
+                }
+            }
+            if (!hit) [remaining addObject:sc];
+        }
+        [self.selectedChannels removeAllObjects];
+        [self.selectedChannels addObjectsFromArray:remaining];
+    } else {
+        // 把当前可见列表里未选的 channel 追加(去重)
+        for (WKChannel *ch in list) {
+            if (![self isChannelSelected:ch]) {
+                [self.selectedChannels addObject:ch];
+            }
+        }
+    }
+    [self reloadData];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(conversationListSelectVM:selectedChanged:)]) {
+        [self.delegate conversationListSelectVM:self selectedChanged:[self selectedChannelsArray]];
+    }
+}
+
 - (void)switchTab:(WKConversationListSelectTab)tab {
     if (self.currentTab == tab) return;
     self.currentTab = tab;
@@ -164,6 +231,7 @@
     } else if (tab == WKConversationListSelectTabFriend && !self.friendsLoaded) {
         [self loadFriends];
     }
+    [self notifySelectionChanged];
 }
 
 - (void)setKeyword:(NSString *)keyword {
@@ -280,11 +348,13 @@
         weakSelf.groupsLoaded = YES;
         if (weakSelf.currentTab == WKConversationListSelectTabGroup) {
             [weakSelf reloadData];
+            [weakSelf notifySelectionChanged];
         }
     }).catch(^(NSError *error){
         weakSelf.groupsLoaded = YES;
         if (weakSelf.currentTab == WKConversationListSelectTabGroup) {
             [weakSelf reloadData];
+            [weakSelf notifySelectionChanged];
         }
     });
 }
@@ -306,6 +376,14 @@
     self.friendsLoaded = YES;
     if (self.currentTab == WKConversationListSelectTabFriend) {
         [self reloadData];
+        [self notifySelectionChanged];
+    }
+}
+
+// 通知外部（VC）选中集合 / 当前 Tab 可选项变化，用于刷新全选工具行与确认按钮文案
+- (void)notifySelectionChanged {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(conversationListSelectVM:selectedChanged:)]) {
+        [self.delegate conversationListSelectVM:self selectedChanged:[self selectedChannelsArray]];
     }
 }
 

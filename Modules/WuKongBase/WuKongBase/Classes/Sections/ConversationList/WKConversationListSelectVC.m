@@ -14,12 +14,16 @@
 #import "WKIconTitleItemCell.h"
 
 #define TAB_HEIGHT 40.0f
+#define SELECT_ALL_BAR_HEIGHT 36.0f
 #define BOTTOM_BAR_HEIGHT 56.0f
 
 @interface WKConversationListSelectVC ()<WKChannelManagerDelegate,WKConversationListSelectVMDelegate>
 @property(nonatomic,strong) UIView *tabContainer;
 @property(nonatomic,strong) NSArray<UIButton*> *tabButtons;
 @property(nonatomic,strong) NSArray<UIView*> *tabIndicators;
+@property(nonatomic,strong) UIView *selectAllBar;     // 多选下显示的全选/取消全选工具行
+@property(nonatomic,strong) UIButton *selectAllBtn;
+@property(nonatomic,strong) UILabel *selectAllCountLbl;
 @property(nonatomic,strong) UIView *bottomBar;
 @property(nonatomic,strong) UIButton *confirmBtn;
 @end
@@ -42,8 +46,10 @@
     self.navigationBar.title = LLang(@"选择会话");
     [self setupTabs];
     if (self.viewModel.multiple) {
+        [self setupSelectAllBar];
         [self setupBottomBar];
         [self updateConfirmTitle];
+        [self updateSelectAllBar];
     }
     [self addDelegates];
 }
@@ -53,6 +59,9 @@
     r.origin.y += TAB_HEIGHT;
     r.size.height -= TAB_HEIGHT;
     if (self.viewModel.multiple) {
+        // 多选模式下顶部多一行全选工具栏，底部多一行确认栏
+        r.origin.y += SELECT_ALL_BAR_HEIGHT;
+        r.size.height -= SELECT_ALL_BAR_HEIGHT;
         r.size.height -= (BOTTOM_BAR_HEIGHT + [self safeBottomInset]);
     }
     return r;
@@ -105,6 +114,7 @@
     WKConversationListSelectTab tab = (WKConversationListSelectTab)btn.tag;
     [self.viewModel switchTab:tab];
     [self updateTabUI];
+    [self updateSelectAllBar];
 }
 
 - (void)updateTabUI {
@@ -116,6 +126,51 @@
         self.tabButtons[i].titleLabel.font = isActive ? [UIFont boldSystemFontOfSize:14] : [UIFont systemFontOfSize:14];
         self.tabIndicators[i].backgroundColor = isActive ? active : [UIColor clearColor];
     }
+}
+
+#pragma mark - SelectAll Bar
+
+- (void)setupSelectAllBar {
+    CGFloat top = self.tabContainer.lim_bottom;
+    self.selectAllBar = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.lim_width, SELECT_ALL_BAR_HEIGHT)];
+    self.selectAllBar.backgroundColor = [WKApp shared].config.cellBackgroundColor;
+    [self.view addSubview:self.selectAllBar];
+
+    self.selectAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.selectAllBtn.frame = CGRectMake(15, 0, 100, SELECT_ALL_BAR_HEIGHT);
+    self.selectAllBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    self.selectAllBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [self.selectAllBtn setTitleColor:[WKApp shared].config.themeColor forState:UIControlStateNormal];
+    [self.selectAllBtn setTitleColor:[[WKApp shared].config.themeColor colorWithAlphaComponent:0.4] forState:UIControlStateDisabled];
+    [self.selectAllBtn addTarget:self action:@selector(onSelectAllTap) forControlEvents:UIControlEventTouchUpInside];
+    [self.selectAllBar addSubview:self.selectAllBtn];
+
+    self.selectAllCountLbl = [[UILabel alloc] initWithFrame:CGRectMake(self.view.lim_width - 165, 0, 150, SELECT_ALL_BAR_HEIGHT)];
+    self.selectAllCountLbl.font = [UIFont systemFontOfSize:12];
+    self.selectAllCountLbl.textAlignment = NSTextAlignmentRight;
+    self.selectAllCountLbl.textColor = [WKApp shared].config.tipColor ?: [UIColor grayColor];
+    [self.selectAllBar addSubview:self.selectAllCountLbl];
+
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, SELECT_ALL_BAR_HEIGHT - 0.5, self.view.lim_width, 0.5)];
+    line.backgroundColor = [WKApp shared].config.lineColor;
+    [self.selectAllBar addSubview:line];
+}
+
+- (void)onSelectAllTap {
+    [self.viewModel toggleSelectAllCurrentTab];
+    [self updateSelectAllBar];
+    [self updateConfirmTitle];
+}
+
+- (void)updateSelectAllBar {
+    if (!self.viewModel.multiple) return;
+    NSInteger total = [self.viewModel currentTabSelectableCount];
+    NSInteger selected = [self.viewModel currentTabSelectedCount];
+    BOOL allSelected = [self.viewModel isCurrentTabAllSelected];
+    NSString *title = allSelected ? LLang(@"取消全选") : LLang(@"全选");
+    [self.selectAllBtn setTitle:title forState:UIControlStateNormal];
+    self.selectAllBtn.enabled = total > 0;
+    self.selectAllCountLbl.text = [NSString stringWithFormat:@"%@ %ld / %ld", LLang(@"已选"), (long)selected, (long)total];
 }
 
 #pragma mark - Bottom Bar
@@ -191,11 +246,13 @@
 
 - (void)conversationListSelectVM:(WKConversationListSelectVM *)vm selectedChanged:(NSArray<WKChannel *> *)channels {
     [self updateConfirmTitle];
+    [self updateSelectAllBar];
 }
 
 #pragma mark -- WKChannelManagerDelegate
 -(void) channelInfoUpdate:(WKChannelInfo*)channelInfo {
     [self reloadData];
+    [self updateSelectAllBar];
 }
 @end
 
