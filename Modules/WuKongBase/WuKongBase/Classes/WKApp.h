@@ -116,6 +116,27 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) logout;
 
 /**
+ 立即登出（不调用服务端注销接口，仅清理本地登录态并跳转登录页）
+ 用于 token 失效 / 强制下线 等需要立刻退出的场景。
+ */
+-(void) immediatelyLogout;
+
+/**
+ 主动检查当前登录态是否被管理后台封禁（账号 / IP / 设备三个维度任意一个命中即弹窗并退出）。
+ 用于 APP 启动 / 从后台回到前台 / socket 重连成功时兜底，防止 forceLogout CMD 因客户端离线未送达。
+ 未登录或已弹过提示框时不会重复弹窗。
+ */
+-(void) checkBanStatusAndHandle;
+
+/**
+ 是否正在显示封禁/强制下线弹窗（共享标志）。
+ forceLogout CMD（WKSystemMessageHandler）/ onKick（WKSystemMessageHandler）/ checkBanStatusAndHandle（WKApp）
+ 三个入口共用，任一入口弹窗后置 YES，避免其他入口重复弹窗或显示错误提示词。
+ immediatelyLogout 时自动复位为 NO。
+ */
+@property(nonatomic,assign) BOOL banDialogShowing;
+
+/**
  注册端点
  @param endpoint 端点对象
  */

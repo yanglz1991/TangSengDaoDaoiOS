@@ -47,6 +47,9 @@
     [self addDelegates];
     
     [self setupChatBackground];
+    
+    // 全局禁言：进入聊天页时提示一次
+    [self showGlobalMuteTipIfNeed];
    
     self.videocallInvoke = [[WKApp shared] invoke:WKPOINT_VIDEOCALL_SUPPORT_FNC param:@{@"channel":self.channel,@"context":self.conversationView.conversationContext}];
     
@@ -103,6 +106,23 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WKNOTIFY_CHATBACKGROUND_CHANGE object:nil];
 }
 
+
+// 全局禁言：进入聊天页时若开启对应禁言则弹提示
+-(void) showGlobalMuteTipIfNeed {
+    WKAppRemoteConfig *rc = [WKApp shared].remoteConfig;
+    if(!rc) {
+        return;
+    }
+    NSString *tip = nil;
+    if(self.channel.channelType == WK_GROUP && rc.disableGroupMessageOn) {
+        tip = (rc.muteTextOfGroup && rc.muteTextOfGroup.length>0) ? rc.muteTextOfGroup : LLang(@"群聊禁言中");
+    } else if((self.channel.channelType == WK_PERSON || self.channel.channelType == WK_CustomerService) && rc.disablePrivateMessageOn) {
+        tip = (rc.muteTextOfPrivate && rc.muteTextOfPrivate.length>0) ? rc.muteTextOfPrivate : LLang(@"私聊禁言中");
+    }
+    if(tip) {
+        [WKAlertUtil alert:tip];
+    }
+}
 
 // 标记阅后即焚的消息（如果超时则删除）
 -(void) markFlameMessages {

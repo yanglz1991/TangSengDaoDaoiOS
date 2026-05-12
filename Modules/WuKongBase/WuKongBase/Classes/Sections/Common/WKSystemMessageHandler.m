@@ -62,30 +62,81 @@ static WKSystemMessageHandler *_instance = nil;
     
     [[WKSDK shared].cmdManager removeDelegate:self];
     [[WKSDK shared].cmdManager addDelegate:self];
-   
     
+    // 监听应用进入前台通知，主动检查设备状态
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkDeviceStatus) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 #pragma mark - WKConnectionManagerDelegate
 // 踢出
+//
+// 服务端封禁链路：sendForceLogoutCMD（CMD 通道，携带 reason/match_type/match_value）
+//                → 等 300ms
+//                → QuitUserDevice（切断长连，触发本回调，reasonCode=WK_REASON_KICK，reason 通常为空）
+// 因此 reasonCode==WK_REASON_KICK 可能对应：
+//   a) 其他设备登录顶号（reason 为空，需要兜底文案"账号已在其他设备上登录"）
+//   b) 账号 / IP / 设备被管理员封禁（真实文案由 forceLogout CMD 携带）
+// 弱网下 Kick 包可能先于 CMD 到达，所以这里延迟 1.2s 再弹窗，期间若 forceLogout CMD
+// 已经弹出了精确文案（banDialogShowing=YES），本回调直接跳过避免显示错误提示词。
 - (void)onKick:(uint8_t)reasonCode reason:(NSString *)reason {
-    [[WKApp shared] logout];
-    
-    NSString *tip = reason;
-    if(reasonCode == WK_REASON_KICK) {
-        tip = LLang(@"账号已在其他设备上登录！");
+    if(reasonCode == WK_REASON_KICK || reasonCode == WK_REASON_IN_BLACKLIST) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 用户在 1.2s 等待期间，可能已通过 forceLogout CMD / checkstatus 弹窗点确认走完
+            // immediatelyLogout（已退回登录页），此时不应再弹"账号已在其他设备上登录"覆盖。
+            if(![WKApp shared].isLogined) {
+                return;
+            }
+            // 已被 forceLogout CMD / checkstatus 兜底处理过，跳过 Kick 自身弹窗，避免错误提示词覆盖
+            if([WKApp shared].banDialogShowing) {
+                return;
+            }
+            NSString *tip;
+            if(reason && reason.length > 0) {
+                // 服务端给了具体 reason（如"IP 已被禁用"/"设备已被封禁"），优先使用
+                tip = reason;
+            } else if(reasonCode == WK_REASON_IN_BLACKLIST) {
+                tip = LLang(@"您的账号已被封禁！");
+            } else {
+                // 真·其他设备登录顶号
+                tip = LLang(@"账号已在其他设备上登录！");
+            }
+            [WKApp shared].banDialogShowing = YES;
+            [self presentKickAlertWithTip:tip];
+        });
+        return;
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+
+    // 非封禁/顶号场景（白名单等）走原同步路径
+    NSString *tip;
+    if(reasonCode == WK_REASON_NOT_IN_WHITELIST) {
+        tip = LLang(@"您不在好友白名单内！");
+    } else if(reason && reason.length > 0) {
+        tip = reason;
+    } else {
+        tip = LLang(@"您的账号已被强制下线！");
+    }
+    [WKApp shared].banDialogShowing = YES;
+    [self presentKickAlertWithTip:tip];
+}
+
+// 统一的 Kick 弹窗展示（onKick 内部使用）
+- (void)presentKickAlertWithTip:(NSString *)tip {
+    dispatch_async(dispatch_get_main_queue(), ^{
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:LLang(@"提示") message:tip preferredStyle:UIAlertControllerStyleAlert];
-        
+
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:LLang(@"好的") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-             
+            [[WKApp shared] logout];
         }];
         [alertController addAction:okAction];
-        [[WKNavigationManager shared].topViewController presentViewController:alertController animated:YES completion:nil];
+        UIViewController *top = [WKNavigationManager shared].topViewController;
+        if(top) {
+            [top presentViewController:alertController animated:YES completion:nil];
+        } else {
+            // 拿不到顶层 VC（如冷启动期间）直接退出兜底
+            [[WKApp shared] logout];
+        }
     });
-    
-   
 }
 
 #pragma mark - WKChatManagerDelegate
@@ -281,11 +332,46 @@ bool needRemind = false; // 是否需要提醒
 }
 
 -(void) handleCMD:(NSString*)cmd param:(NSDictionary*)param {
-    if([cmd isEqualToString:WKCMDMemberUpdate]) { // 群成员更新
+    if([cmd isEqualToString:@"appconfigUpdate"]) { // 全局 app 配置变更（管理后台禁言开关等）
+        WKLogDebug(@"处理 appconfigUpdate 命令，强制重新拉取远程配置！");
+        NSLog(@"[禁言追踪][WKSystemMessageHandler] 收到 appconfigUpdate CMD");
+        // 必须用 forceRequestConfig：requestConfig 内部有 requestSuccess 守卫，
+        // 启动后第一次拉取成功就再也不会重新请求，导致后台改的全员禁言等开关
+        // 必须强退冷启动才能生效（这就是用户报告的现象）。
+        [[WKApp shared].remoteConfig forceRequestConfig:nil];
+        return;
+    }
+    if([cmd isEqualToString:@"forceLogout"]) { // 管理后台触发的强制下线
+        [self handleForceLogout:param];
+        return;
+    }
+    if([cmd isEqualToString:WKCMDMemberUpdate]) { // 群成员更新（包含禁言 / 角色变更 / 群昵称等）
         WKLogDebug(@"处理群成员更新命令！");
+        NSLog(@"[禁言追踪] 收到 memberUpdate CMD, param=%@", param);
         if(param&&param[@"group_no"]) {
-            // 同步群成员
-            [[WKGroupManager shared] syncMemebers:param[@"group_no"]];
+            NSString *groupNo = param[@"group_no"];
+            // 同步群成员，等 DB 写完之后再发 UI 刷新通知。
+            //
+            // 旧实现里 syncMemebers 启动后立即 dispatch_async post 一次通知 → VM.handleMemberUpdate
+            // 在 DB 尚未写完时查到旧数据并缓存到 memberOfMe，导致禁言/角色变更不及时生效，
+            // 后台进前台也无法触发刷新，必须强退冷启动从 DB 取新值（这就是用户报告的现象）。
+            //
+            // WKGroupManager.syncMemebers 完成回调内部本就会发一次 WKNOTIFY_GROUP_MEMBERUPDATE
+            // （前提是 syncMemberCount > 0）。但为兜底「服务端返回 0 条增量」的边界情况，
+            // 这里在 complete 中再补发一次通知，确保 UI 一定会收到刷新事件。
+            [[WKGroupManager shared] syncMemebers:groupNo complete:^(NSInteger syncMemberCount, NSError * _Nullable error) {
+                if(error) {
+                    WKLogError(@"CMD memberUpdate 同步群成员失败！->%@", error);
+                    return;
+                }
+                // 仅 syncMemberCount == 0 时补发；>0 时 WKGroupManager 内部已发，避免重复
+                if(syncMemberCount > 0) {
+                    return;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":groupNo}];
+                });
+            }];
         }
     }else if([cmd isEqualToString:WKCMDUnreadClear]) { // 清除未读数
          WKLogDebug(@"处理清除未读消息命令！");
@@ -418,6 +504,81 @@ bool needRemind = false; // 是否需要提醒
      });
 }
 
+// 处理 forceLogout CMD：管理后台封禁用户/IP/设备时下发
+//   match_type = user: 直接退出
+//   match_type = device: 比对本机 device_id 一致才退出（精确）
+//   match_type = ip:   直接退出（服务端已筛选目标 uid）
+-(void) handleForceLogout:(NSDictionary*)param {
+    if(!param) {
+        return;
+    }
+    NSString *matchType  = param[@"match_type"]  ?: @"user";
+    NSString *matchValue = param[@"match_value"] ?: @"";
+    NSString *reason     = param[@"reason"];
+    
+    // 根据不同的封禁类型设置默认提示词
+    if(!reason || reason.length == 0) {
+        if([matchType isEqualToString:@"ip"]) {
+            reason = LLang(@"您的IP地址已被封禁，无法继续使用！");
+        } else if([matchType isEqualToString:@"device"]) {
+            reason = LLang(@"您的设备已被封禁，无法继续使用！");
+        } else {
+            reason = LLang(@"您的账号已被管理员强制下线");
+        }
+    }
+
+    // 仅 device 维度需要本机匹配
+    if([matchType isEqualToString:@"device"] && matchValue.length > 0) {
+        NSString *localDeviceId = [UIDevice getUUID];
+        if(![matchValue isEqualToString:localDeviceId]) {
+            return;
+        }
+    }
+    // 防止短时间内重复弹窗（CMD 偶发重复）
+    static BOOL forceLogoutTriggered = NO;
+    static NSTimeInterval lastTriggerTime = 0;
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    
+    // 如果距离上次触发超过30秒，重置状态
+    if(forceLogoutTriggered && (currentTime - lastTriggerTime) > 30) {
+        forceLogoutTriggered = NO;
+    }
+    
+    if(forceLogoutTriggered) {
+        return;
+    }
+    forceLogoutTriggered = YES;
+    lastTriggerTime = currentTime;
+    // 立即占位共享标志：之后到达的 onKick disconnect 包看到此标志会跳过自身弹窗，
+    // 避免管理员封禁场景出现「您的IP已被封禁」与「账号已在其他设备上登录」两个提示重叠
+    [WKApp shared].banDialogShowing = YES;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LLang(@"账号已下线")
+                                                                      message:reason
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:LLang(@"我知道了")
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction * _Nonnull action) {
+            [[WKApp shared] immediatelyLogout];
+        }]];
+        UIViewController *top = [WKNavigationManager shared].topViewController;
+        if(top) {
+            [top presentViewController:alert animated:YES completion:nil];
+        } else {
+            // 兜底：拿不到顶层 VC 时直接退出
+            [[WKApp shared] immediatelyLogout];
+        }
+        
+        // 设备封禁后重置触发状态，允许后续检查
+        if([matchType isEqualToString:@"device"]) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                forceLogoutTriggered = NO;
+            });
+        }
+    });
+}
+
 // 播放消息发送成功的声音
 -(void) playMessageSendOutSound {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -434,6 +595,28 @@ bool needRemind = false; // 是否需要提醒
         }
         AudioServicesPlaySystemSound(soundID);
     });
+}
+
+#pragma mark - Device Status Check
+
+// 主动检查设备状态
+- (void)checkDeviceStatus {
+    WKLogDebug(@"应用进入前台，检查设备状态");
+    
+    // 如果当前有连接，可能是网络恢复后的检查
+    if([WKSDK shared].connectionManager.connectStatus == WKConnected) {
+        // 延迟1秒后检查，避免过于频繁
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self performDeviceStatusCheck];
+        });
+    }
+}
+
+// 执行设备状态检查
+- (void)performDeviceStatusCheck {
+    // 这里可以向服务端发送一个状态检查请求
+    // 或者依赖连接层面的踢出机制
+    WKLogDebug(@"执行设备状态检查");
 }
 
 @end

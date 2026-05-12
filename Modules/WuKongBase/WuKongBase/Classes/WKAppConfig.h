@@ -197,12 +197,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign) BOOL registerUserMustCompleteInfoOn; // 用户注册是否必须要完善信息后才能进入
 
+// 群聊禁言开关（含群发消息/建群/加群成员/加好友）
+@property(nonatomic,assign) BOOL disableGroupMessageOn;
+// 私聊禁言开关
+@property(nonatomic,assign) BOOL disablePrivateMessageOn;
+// 群聊禁言客户端展示文案
+@property(nonatomic,copy) NSString *muteTextOfGroup;
+// 私聊禁言客户端展示文案
+@property(nonatomic,copy) NSString *muteTextOfPrivate;
+
 @property(nonatomic,strong) NSArray<WKAppModuleResp*> *modules;
 
 @property(nonatomic,assign) BOOL requestSuccess; // 请求远程配置是否成功
 @property(nonatomic,assign) BOOL requestAppModuleSuccess; // 请求app模块是否成功
 
 -(void) requestConfig:(void(^__nullable)(NSError  * __nullable error))callback;
+
+/// 强制重新拉取远程配置（忽略 requestSuccess 守卫）。
+/// 服务端推 appconfigUpdate CMD 时必须用这个版本，否则配置永远停在第一次启动时拉到的值，
+/// 导致后台修改的"全员禁言"等开关需要冷启动 APP 才能生效。
+-(void) forceRequestConfig:(void(^__nullable)(NSError  * __nullable error))callback;
 
 // 启用或关闭模块
 -(void) modules:(NSString*)sid on:(BOOL)on;

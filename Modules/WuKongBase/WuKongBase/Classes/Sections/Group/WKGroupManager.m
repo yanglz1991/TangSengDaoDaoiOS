@@ -19,6 +19,12 @@ typedef void(^syncGroupComplete)(NSError *error,bool notifyBefore);
 
 @property(nonatomic,strong) NSLock *syncMembersRequestLock;
 
+// 标记某个 groupNo 的成员 sync 正在跑时，外部又发起了新的 syncMemebers 请求。
+// 解决场景：旧 sync 用的是过期的 syncKey，已经在路上无法取消，新请求被合并到旧请求的 complete
+// 字典中。等旧 sync 响应回来时其数据并不包含本次禁言/角色变更后的成员，VM 拿到旧数据 → UI 不生效。
+// 因此在旧 sync 完成时，如发现此标志为 YES，立即用最新 syncKey 再发起一次拉取，保证最终一致性。
+@property(nonatomic,strong) NSMutableSet<NSString*> *pendingResyncMembersSet;
+
 @property(nonatomic,strong) NSMutableDictionary<NSString*,NSMutableArray*> *syncRequestDict;
 @property(nonatomic,strong) NSLock *syncRequestLock;
 
@@ -42,6 +48,7 @@ static WKGroupManager *_instance;
         _instance = [[self alloc] init];
         _instance.syncMembersRequestLock = [[NSLock alloc] init];
         _instance.syncMembersRequestDict = [NSMutableDictionary dictionary];
+        _instance.pendingResyncMembersSet = [NSMutableSet set];
         _instance.syncRequestDict = [NSMutableDictionary dictionary];
         _instance.syncRequestLock =[[NSLock alloc] init];
     });
@@ -202,23 +209,47 @@ static WKGroupManager *_instance;
 }
 
 -(void)  syncMemebers:(NSString*)groupNo complete:(syncMemberComplete)complete {
-    if(_delegate && [_delegate respondsToSelector:@selector(groupManager:syncMemebers:complete:)]) {
-        if([self hasSyncMemberReqeust:groupNo]) { // 有同步请求，则不再进行请求，最后只做回调
-            [self putSyncMemberRequest:groupNo complete:complete]; // 放入同步请求
-        }else {
-             [self putSyncMemberRequest:groupNo complete:complete]; // 放入同步请求
-            [_delegate groupManager:self syncMemebers:groupNo complete:^(NSInteger syncMemberCount,NSError *error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self executeSyncMemberComplete:groupNo syncMemberCount:syncMemberCount error:error]; // 执行同步返回方法
-                    [self removeSyncMemberReqeuest:groupNo]; // 移除同步方法
-                    if(!error && syncMemberCount>0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":groupNo}];
-                    }
-                });
-            }];
-        }
-
+    if(!_delegate || ![_delegate respondsToSelector:@selector(groupManager:syncMemebers:complete:)]) {
+        NSLog(@"[禁言追踪][WKGroupManager] syncMemebers no delegate, groupNo=%@", groupNo);
+        return;
     }
+    if([self hasSyncMemberReqeust:groupNo]) {
+        NSLog(@"[禁言追踪][WKGroupManager] syncMemebers MERGED to running request, groupNo=%@ → mark pendingResync", groupNo);
+        [self putSyncMemberRequest:groupNo complete:complete];
+        [self.syncMembersRequestLock lock];
+        [self.pendingResyncMembersSet addObject:groupNo];
+        [self.syncMembersRequestLock unlock];
+        return;
+    }
+    NSLog(@"[禁言追踪][WKGroupManager] syncMemebers START NEW request, groupNo=%@", groupNo);
+    [self putSyncMemberRequest:groupNo complete:complete];
+    __weak typeof(self) weakSelf = self;
+    [_delegate groupManager:self syncMemebers:groupNo complete:^(NSInteger syncMemberCount,NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) self = weakSelf;
+            if(!self) return;
+            NSLog(@"[禁言追踪][WKGroupManager] syncMemebers FINISH groupNo=%@ count=%ld err=%@", groupNo, (long)syncMemberCount, error);
+            [self executeSyncMemberComplete:groupNo syncMemberCount:syncMemberCount error:error];
+            [self removeSyncMemberReqeuest:groupNo];
+
+            [self.syncMembersRequestLock lock];
+            BOOL needResync = [self.pendingResyncMembersSet containsObject:groupNo];
+            if(needResync) {
+                [self.pendingResyncMembersSet removeObject:groupNo];
+            }
+            [self.syncMembersRequestLock unlock];
+
+            if(!error && syncMemberCount>0) {
+                NSLog(@"[禁言追踪][WKGroupManager] post WKNOTIFY_GROUP_MEMBERUPDATE groupNo=%@", groupNo);
+                [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":groupNo}];
+            }
+
+            if(needResync) {
+                NSLog(@"[禁言追踪][WKGroupManager] pendingResync=YES, RE-SYNC groupNo=%@", groupNo);
+                [self syncMemebers:groupNo complete:nil];
+            }
+        });
+    }];
 }
 
 -(void)  syncMemebers:(NSString*)groupNo {

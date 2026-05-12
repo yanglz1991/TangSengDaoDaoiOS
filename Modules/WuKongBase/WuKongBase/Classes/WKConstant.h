@@ -292,6 +292,8 @@
 #define WKNOTIFY_CHANNEL_AVATAR_UPDATE @"channel.avatarupdate"
 // 标签列表刷新
 #define WK_NOTIFY_LABELLIST_REFRESH @"lim.notify.labellist.refresh"
+// 远程 app 配置（含全局禁言开关）已更新
+#define WKNOTIFY_APP_REMOTE_CONFIG_UPDATE @"lim.app.remoteconfig.update"
 
 // 消息类型
 typedef enum : NSUInteger {

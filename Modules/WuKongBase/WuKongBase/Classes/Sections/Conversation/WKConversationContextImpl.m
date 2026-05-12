@@ -12,6 +12,9 @@
 #import "WKReplyView.h"
 #import "WKMessageEditView.h"
 #import "WKContextMenusVC.h"
+#import "WKAlertUtil.h"
+#import "WKAppConfig.h"
+#import "WKApp.h"
 #import <WuKongBase/WuKongBase-Swift.h>
 
 @interface WKConversationContextImpl ()
@@ -493,6 +496,20 @@
 
 
 -(WKMessage*) sendMessage:(WKMessageContent*)content {
+    // ---------- 全局禁言拦截 ----------
+    WKAppRemoteConfig *rc = [WKApp shared].remoteConfig;
+    if(rc) {
+        if(self.channel.channelType == WK_GROUP && rc.disableGroupMessageOn) {
+            NSString *tip = (rc.muteTextOfGroup && rc.muteTextOfGroup.length>0) ? rc.muteTextOfGroup : LLang(@"群聊禁言中");
+            [WKAlertUtil alert:tip];
+            return nil;
+        }
+        if((self.channel.channelType == WK_PERSON || self.channel.channelType == WK_CustomerService) && rc.disablePrivateMessageOn) {
+            NSString *tip = (rc.muteTextOfPrivate && rc.muteTextOfPrivate.length>0) ? rc.muteTextOfPrivate : LLang(@"私聊禁言中");
+            [WKAlertUtil alert:tip];
+            return nil;
+        }
+    }
     WKSetting *setting = [WKSetting new];
     if(self.conversationVM.channelInfo) {
         setting.receiptEnabled = self.conversationVM.channelInfo.receipt;

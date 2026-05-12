@@ -103,6 +103,14 @@
         @"action":@(1),
         @"key": @(self.selectedIndex+1),
     }].then(^{
+        // 设置成功后主动同步群成员信息
+        [[WKGroupManager shared] syncMemebers:self.channel.channelId];
+        
+        // 发送群成员更新通知，触发 UI 刷新禁言状态
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":self.channel.channelId}];
+        });
+        
         [topView hideHud];
         [[WKNavigationManager shared] popViewControllerAnimated:YES];
     }).catch(^(NSError *error){

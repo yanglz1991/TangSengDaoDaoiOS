@@ -43,6 +43,12 @@
 }
 
 -(void) groupCreatePressed {
+    WKAppRemoteConfig *rc = [WKApp shared].remoteConfig;
+    if(rc && rc.disableGroupMessageOn) {
+        NSString *tip = (rc.muteTextOfGroup && rc.muteTextOfGroup.length>0) ? rc.muteTextOfGroup : LLang(@"群聊禁言中");
+        [WKAlertUtil alert:tip];
+        return;
+    }
     [[WKApp shared] invoke:WKPOINT_CONVERSATION_STARTCHAT param:nil];
 }
 

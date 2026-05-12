@@ -250,6 +250,13 @@
 }
 
 -(void) addFriend:(WKContactsFriendModel*)model {
+    // 全局群聊禁言开启时禁止添加好友
+    WKAppRemoteConfig *rc = [WKApp shared].remoteConfig;
+    if(rc && rc.disableGroupMessageOn) {
+        NSString *tip = (rc.muteTextOfGroup && rc.muteTextOfGroup.length>0) ? rc.muteTextOfGroup : LLang(@"群聊禁言中");
+        [WKAlertUtil alert:tip];
+        return;
+    }
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:LLang(@"你需要发送验证码申请，等对方通过") preferredStyle:UIAlertControllerStyleAlert];
     //增加确定按钮；
     __weak typeof(self) weakSelf = self;

@@ -129,6 +129,9 @@
     __weak typeof(self) weakSelf = self;
     self.members = [self getAllMembers];
     weakSelf.memberOfMe = nil;
+    WKChannelMember *me = self.memberOfMe;
+    NSLog(@"[禁言追踪][WKConversationVM] handleMemberUpdate channel=%@ memberOfMe.uid=%@ forbidden_expir_time=%@",
+          self.channel.channelId, me.memberUid, me.extra[@"forbidden_expir_time"]);
     lim_dispatch_main_async_safe(^{
         if(weakSelf.onMemberUpdate) {
             weakSelf.onMemberUpdate();

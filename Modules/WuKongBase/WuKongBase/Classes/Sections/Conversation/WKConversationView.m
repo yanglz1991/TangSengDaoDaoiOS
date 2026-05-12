@@ -227,6 +227,8 @@
 -(void) addDelegates {
     // 长按菜单隐藏(长按菜单恢复到原来状态)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuDidHideMenu:) name:UIMenuControllerDidHideMenuNotification object:nil];
+    // 远程配置更新（管理后台禁言开关变化）→ 立即刷新输入框禁言面板
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppRemoteConfigUpdate) name:WKNOTIFY_APP_REMOTE_CONFIG_UPDATE object:nil];
 }
 
 -(void) removeDelegates {
@@ -234,6 +236,14 @@
     if(WKApp.shared.config.takeScreenshotOn) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerDidHideMenuNotification object:nil];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WKNOTIFY_APP_REMOTE_CONFIG_UPDATE object:nil];
+}
+
+-(void) handleAppRemoteConfigUpdate {
+    NSLog(@"[禁言追踪][WKConversationView] handleAppRemoteConfigUpdate channel=%@", self.channel.channelId);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setGroupForbiddenIfNeed];
+    });
 }
 
 - (void)layoutSubviews {
@@ -637,6 +647,20 @@
 }
 
 -(BOOL) setGroupForbiddenIfNeed {
+    // 全局禁言开关（管理后台一键禁言群聊 / 私聊）。无论身份都生效，群主和管理员也禁言。
+    WKAppRemoteConfig *rc = [WKApp shared].remoteConfig;
+    if(rc) {
+        if(self.channel.channelType == WK_GROUP && rc.disableGroupMessageOn) {
+            NSString *tip = (rc.muteTextOfGroup && rc.muteTextOfGroup.length>0) ? rc.muteTextOfGroup : LLang(@"全员禁言中");
+            [self setGroupForbidden:YES title:tip];
+            return true;
+        }
+        if((self.channel.channelType == WK_PERSON || self.channel.channelType == WK_CustomerService) && rc.disablePrivateMessageOn) {
+            NSString *tip = (rc.muteTextOfPrivate && rc.muteTextOfPrivate.length>0) ? rc.muteTextOfPrivate : LLang(@"全员禁言中");
+            [self setGroupForbidden:YES title:tip];
+            return true;
+        }
+    }
     if(self.conversationVM.memberRole == WKMemberRoleCreator || self.conversationVM.memberRole == WKMemberRoleManager) {
         [self setGroupForbidden:NO];
         return true;

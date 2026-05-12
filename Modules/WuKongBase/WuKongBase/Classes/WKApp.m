@@ -448,6 +448,48 @@ static WKApp *_instance;
             [WKSDK.shared.options setClientMsgDeviceId: [result[@"id"] integerValue]];
         }
     });
+    // 冷启动 / 登录成功进入 APP 时兜底检查一次封禁状态
+    // 延迟 2s，等首页和导航控制器准备好，避免在 LaunchScreen 期间弹窗
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self checkBanStatusAndHandle];
+    });
+}
+
+// 上一次的 IM 连接状态，用于检测 断开→连接成功 的边沿，触发封禁状态兜底检查
+static WKConnectStatus _wkLastConnectStatus = WKDisconnected;
+
+-(void) checkBanStatusAndHandle {
+    if(![self isLogined]) return;
+    if(self.banDialogShowing) return;
+    NSString *deviceID = [UIDevice getUUID] ?: @"";
+    NSDictionary *params = deviceID.length > 0 ? @{@"device_id": deviceID} : @{};
+    [[WKAPIClient sharedClient] GET:@"user/checkstatus" parameters:params].then(^(NSDictionary *result) {
+        if(!result) return;
+        if(![result[@"banned"] boolValue]) return;
+        if(self.banDialogShowing) return;
+        self.banDialogShowing = YES;
+        NSString *reason = result[@"reason"] ?: @"您的账号已被管理员封禁";
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LLang(@"账号已下线")
+                                                                          message:reason
+                                                                   preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:LLang(@"我知道了")
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+                [[WKApp shared] immediatelyLogout];
+            }]];
+            UIViewController *top = [WKNavigationManager shared].topViewController;
+            if(top) {
+                [top presentViewController:alert animated:YES completion:nil];
+            } else {
+                // 拿不到顶层 VC，直接退出兜底
+                [[WKApp shared] immediatelyLogout];
+            }
+        });
+    }).catch(^(NSError *error){
+        // 静默：失败不影响业务，下次前台切换时会再次检查
+        WKLogWarn(@"checkBanStatus 失败: %@", error.domain);
+    });
 }
 
 - (void)registerForNotification {
@@ -616,6 +658,9 @@ static WKApp *_instance;
 }
 
 -(void) immediatelyLogout {
+    // 退出登录时清空封禁弹窗标志，允许重新登录后再次进入兜底链路
+    self.banDialogShowing = NO;
+    _wkLastConnectStatus = WKDisconnected;
     // 清楚登录信息
     [[WKLoginInfo shared] clearMainData];
     // 调用登出
@@ -670,6 +715,8 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
     [self showLockScreenProtectIfNeed];
     
     [self showScreenProtectIfNeed];
+    // 从后台回到前台时兜底检查封禁状态（防止后台时漏收 forceLogout CMD）
+    [self checkBanStatusAndHandle];
 }
 
 -(void) appWillResignActive:(NSNotification*) notification  {
@@ -1500,6 +1547,17 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
 #pragma mark -- WKConnectionManagerDelegate
 
 - (void)onConnectStatus:(WKConnectStatus)status reasonCode:(WKReason)reasonCode{
+    // socket 从「非连接」边沿切换到「已连接」时，兜底检查一次封禁状态。
+    // 用于覆盖：APP 一直前台运行、网络抖动期间漏收 forceLogout CMD（CMD 是 NoPersist 一次性投递）。
+    // 防止设备封禁 / IP 封禁场景下，服务端推 CMD 失败后客户端永远不知情。
+    if(status == WKConnected && _wkLastConnectStatus != WKConnected && [self isLogined]) {
+        // 延迟 1.5s：等首次同步会话 / 拉取离线消息的接口风暴过去，避免接口排队阻塞兜底请求
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self checkBanStatusAndHandle];
+        });
+    }
+    _wkLastConnectStatus = status;
+
     if(![UIScreen mainScreen].isCaptured) {
         if(![WKApp shared].isLogined || ![WKMySettingManager shared].offlineProtection) {
             [self hiddenScreenProtect];

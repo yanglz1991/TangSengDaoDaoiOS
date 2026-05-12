@@ -466,10 +466,22 @@
 @implementation WKAppRemoteConfig
 
 -(void) requestConfig:(void(^)(NSError  * __nullable error))callback {
-    
+    [self requestConfigForce:NO callback:callback];
+}
+
+-(void) forceRequestConfig:(void(^)(NSError  * __nullable error))callback {
+    [self requestConfigForce:YES callback:callback];
+}
+
+-(void) requestConfigForce:(BOOL)force callback:(void(^)(NSError  * __nullable error))callback {
+
     __weak typeof(self) weakSelf = self;
-    if(!self.requestSuccess && !self.startRequest) {
+    // force=YES 时仅靠 startRequest 防止并发，不再被 requestSuccess 卡住。
+    // 这是修复 appconfigUpdate CMD 不生效（必须冷启动）的核心：原实现只在首次失败时才会再请求一次。
+    BOOL canRequest = force ? !self.startRequest : (!self.requestSuccess && !self.startRequest);
+    if(canRequest) {
         self.startRequest = true;
+        NSLog(@"[禁言追踪][WKAppRemoteConfig] requestConfig START force=%d", force);
         [[WKAPIClient sharedClient] GET:@"common/appconfig" parameters:@{}].then(^(NSDictionary *resultDict){
             weakSelf.webURL =  resultDict[@"web_url"]?:@"";
             if(resultDict[@"phone_search_off"]) {
@@ -491,10 +503,22 @@
             if(resultDict[@"register_user_must_complete_info_on"]) {
                 weakSelf.registerUserMustCompleteInfoOn = [resultDict[@"register_user_must_complete_info_on"] boolValue];
             }
+            // 禁言开关：必须无条件覆盖（不能用 if(resultDict[key]) 守卫），
+            // 否则后台从开 -> 关时，服务端可能省略字段或返回 0/false，客户端旧值无法被擦掉。
+            weakSelf.disableGroupMessageOn = [resultDict[@"disable_group_message_on"] boolValue];
+            weakSelf.disablePrivateMessageOn = [resultDict[@"disable_private_message_on"] boolValue];
+            weakSelf.muteTextOfGroup = resultDict[@"mute_text_of_group"] ?: @"";
+            weakSelf.muteTextOfPrivate = resultDict[@"mute_text_of_private"] ?: @"";
            
             
             weakSelf.requestSuccess = true;
             weakSelf.startRequest = false;
+            NSLog(@"[禁言追踪][WKAppRemoteConfig] requestConfig OK disableGroup=%d disablePrivate=%d",
+                  weakSelf.disableGroupMessageOn, weakSelf.disablePrivateMessageOn);
+            // 通知 UI 刷新（输入框、禁言面板等）。在主线程发，确保 UI 更新安全。
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_APP_REMOTE_CONFIG_UPDATE object:nil];
+            });
             if(callback) {
                 callback(nil);
             }

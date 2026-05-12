@@ -231,6 +231,14 @@
                                         @"member_uid":uid,
                                         @"action":@(0)
                                     }].then(^{
+                                        // 解除禁言成功后主动同步群成员信息
+                                        [[WKGroupManager shared] syncMemebers:weakSelf.fromChannel.channelId];
+                                        
+                                        // 发送群成员更新通知，触发 UI 刷新禁言状态
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":weakSelf.fromChannel.channelId}];
+                                        });
+                                        
                                         [topView hideHud];
                                         [[WKNavigationManager shared] popViewControllerAnimated:YES];
                                     }).catch(^(NSError *error){

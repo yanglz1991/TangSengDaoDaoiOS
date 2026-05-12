@@ -58,23 +58,42 @@
 }
 
 // 同步群成员
+//
+// 修复禁言/角色变更等成员属性更新后，CMD memberUpdate 触发同步但 UI 不及时生效的问题：
+// 旧实现里 addOrUpdateMembers 通过 dispatch_async 异步落库，但上层 finish 立即回调
+// → WKGroupManager 紧接着 dispatch_async(main, post WKNOTIFY_GROUP_MEMBERUPDATE)
+// → WKConversationVM.handleMemberUpdate 主线程同步查 DB。
+// global_queue 调度通常慢于 main_queue 的下一轮 runloop，导致读先于写到达 FMDB dbQueue
+// （serial），VM 拿到旧成员数据，禁言状态不生效，需强退冷启动才能从 DB 取到新值。
+//
+// 新实现：用 dispatch_group 跟踪所有写 DB 任务，所有写完成后才回调 complete → 发通知 → VM 查 DB
+// 一定能拿到最新数据。
 - (void)groupManager:(nonnull WKGroupManager *)manager syncMemebers:(nonnull NSString *)groupNo complete:(void (^ _Nullable)(NSInteger syncMemberCount,NSError * __nullable error))complete {
     NSInteger limit = 10000;
     __block NSInteger memberCount = 0;
+    dispatch_group_t dbWriteGroup = dispatch_group_create();
     [self requestSyncMembers:groupNo limit:limit maxRetryCount:50 complete:^(NSArray<WKChannelMember *> *members, NSError *error) {
         if(error) {
             WKLogError(@"群[%@]同步成员失败！->%@",groupNo,error);
             return;
         }
+        memberCount+= members.count;
+        // 异步落库的同时用 dispatch_group 占位，finish 必须等本次写完才能放行
+        dispatch_group_enter(dbWriteGroup);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[WKSDK shared].channelManager addOrUpdateMembers:members];
+            dispatch_group_leave(dbWriteGroup);
         });
-        memberCount+= members.count;
-                   
+
     } finish:^{
-        if(complete) {
-            complete(memberCount,nil);
-        }
+        // 等待所有分页的 DB 写入全部完成，再回调 complete。
+        // 上层 WKGroupManager 收到 complete 后才发 WKNOTIFY_GROUP_MEMBERUPDATE 通知，
+        // 此时 WKConversationVM.handleMemberUpdate 查 DB 必拿到最新成员（含最新 forbidden_expir_time）。
+        dispatch_group_notify(dbWriteGroup, dispatch_get_main_queue(), ^{
+            if(complete) {
+                complete(memberCount,nil);
+            }
+        });
     }];
     
     
@@ -397,6 +416,15 @@
 // 群禁言
 - (void)groupManager:(WKGroupManager *)manager group:(NSString *)groupNo forbidden:(BOOL)forbidden complete:(void (^)(NSError * _Nullable))complete {
     [[WKAPIClient sharedClient] POST:[NSString stringWithFormat:@"groups/%@/forbidden/%d",groupNo,forbidden?1:0] parameters:nil].then(^{
+              // 设置成功后主动刷新频道信息
+              WKChannel *channel = [[WKChannel alloc] initWith:groupNo channelType:WK_GROUP];
+              [[WKSDK shared].channelManager fetchChannelInfo:channel];
+              
+              // 发送群成员更新通知，触发 UI 刷新禁言状态
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":groupNo}];
+              });
+              
               if(complete) {
                   complete(nil);
               }
@@ -410,6 +438,15 @@
 
 - (void)groupManager:(WKGroupManager *)manager group:(NSString *)groupNo forbiddenAddFriend:(BOOL)forbidden complete:(void (^)(NSError * _Nullable))complete {
     [[WKAPIClient sharedClient] POST:[NSString stringWithFormat:@"groups/%@/forbidden_add_friend/%d",groupNo,forbidden?1:0] parameters:nil].then(^{
+              // 设置成功后主动刷新频道信息
+              WKChannel *channel = [[WKChannel alloc] initWith:groupNo channelType:WK_GROUP];
+              [[WKSDK shared].channelManager fetchChannelInfo:channel];
+              
+              // 发送群成员更新通知，触发 UI 刷新
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [[NSNotificationCenter defaultCenter] postNotificationName:WKNOTIFY_GROUP_MEMBERUPDATE object:@{@"group_no":groupNo}];
+              });
+              
               if(complete) {
                   complete(nil);
               }
