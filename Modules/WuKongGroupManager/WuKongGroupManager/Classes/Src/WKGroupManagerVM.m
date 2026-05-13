@@ -13,6 +13,8 @@
 #import "WKAvatarUtil.h"
 #import "WKModelConvert.h"
 #import "WKGroupBlacklistVC.h"
+#import "WKGroupApprovalListVC.h"
+#import "WKNavigationManager.h"
 @interface WKGroupManagerVM ()
 
 @property(nonatomic,strong) NSArray<WKChannelMember*> *managerAndCreators; // 群里的管理员和创建者
@@ -182,6 +184,24 @@
                               [[WKGroupManager shared] groupSetting:weakSelf.channel.channelId settingKey:WKGroupSettingKeyInvite on:on];
                           }
                          
+                     }
+             ],
+        },
+        @{
+             @"height":@(10.0f),
+             @"remark":LLang(@"仅显示尚未审批的入群邀请，已拒绝的不再展示。点击进入可通过或拒绝。"),
+             @"items":@[
+                     @{
+                          @"class":WKLabelItemModel.class,
+                          @"label":LLang(@"审批记录"),
+                          @"bottomLeftSpace":@(0.0f),
+                          @"showBottomLine":@(NO),
+                          @"showTopLine":@(NO),
+                          @"onClick":^(WKFormItemModel *model, NSIndexPath *indexPath){
+                              WKGroupApprovalListVC *vc = [WKGroupApprovalListVC new];
+                              vc.channel = weakSelf.channel;
+                              [[WKNavigationManager shared] pushViewController:vc animated:YES];
+                          }
                      }
              ],
         },

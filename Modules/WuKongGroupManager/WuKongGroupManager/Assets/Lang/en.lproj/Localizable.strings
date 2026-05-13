@@ -46,6 +46,13 @@
 "开启后，群成员无法通过该群添加好友。"="After it is turned on, group members cannot add friends through the group.";
 "开启后，新加入聊天的成员能看见以前的聊天记录。"="When enabled, new members who join the chat can see the previous chat history.";
 
+// WKGroupApprovalListVC / WKGroupApprovalListVM
+"审批记录"="Approval Records";
+"待审批"="Pending";
+"暂无待审批的入群邀请"="No invitations pending approval";
+"仅显示尚未审批的入群邀请，已拒绝的不再展示。点击进入可通过或拒绝。"="Only invitations pending approval are shown here. Rejected ones are hidden. Tap to approve or reject.";
+"邀请 %lu 位朋友进群：%@"="Invited %lu friend(s): %@";
+
 
 
 

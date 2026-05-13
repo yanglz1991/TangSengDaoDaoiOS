@@ -27,6 +27,46 @@ post_install do |installer|
         end
         
     end
+
+    # ------------------------------------------------------------------
+    # 为 Apple 要求但未自带 PrivacyInfo.xcprivacy 的第三方 Pod 注入隐私清单
+    # 解决 App Store 审核错误 ITMS-91061: Missing privacy manifest
+    # 模板位于 ./privacy_manifests/PrivacyInfo.xcprivacy
+    # ------------------------------------------------------------------
+    require 'fileutils'
+
+    privacy_manifest_targets = %w[AFNetworking FMDB MBProgressHUD SDWebImage Starscream Toast]
+    privacy_manifest_template = File.expand_path('privacy_manifests/PrivacyInfo.xcprivacy', __dir__)
+
+    if File.exist?(privacy_manifest_template)
+        installer.pods_project.targets.each do |target|
+            next unless privacy_manifest_targets.include?(target.name)
+
+            pod_dir = File.join(installer.sandbox.root, target.name)
+            next unless File.directory?(pod_dir)
+
+            dst_manifest = File.join(pod_dir, 'PrivacyInfo.xcprivacy')
+            FileUtils.cp(privacy_manifest_template, dst_manifest)
+
+            # 若已添加过则跳过，避免 pod install 重复运行造成冗余引用
+            already_added = target.resources_build_phase.files_references.any? do |ref|
+                ref && ref.path && ref.path.to_s.end_with?('PrivacyInfo.xcprivacy')
+            end
+            next if already_added
+
+            group = installer.pods_project.main_group.find_subpath(target.name, true)
+            group.set_source_tree('<group>') if group.source_tree.to_s.empty?
+            file_ref = group.new_reference(dst_manifest)
+            target.resources_build_phase.add_file_reference(file_ref, true)
+
+            Pod::UI.puts "  - 已为 #{target.name} 注入 PrivacyInfo.xcprivacy".green
+        end
+
+        # 保存 Pods.xcodeproj 修改
+        installer.pods_project.save
+    else
+        Pod::UI.warn "未找到 privacy manifest 模板: #{privacy_manifest_template}"
+    end
 end
 
 

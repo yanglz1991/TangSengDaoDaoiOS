@@ -10,6 +10,9 @@
 #endif
 #endif
 
+#import "WKGroupApprovalCell.h"
+#import "WKGroupApprovalListVC.h"
+#import "WKGroupApprovalListVM.h"
 #import "WKGroupAvatarVC.h"
 #import "WKGroupBlacklistVC.h"
 #import "WKGroupBlacklistVM.h"
