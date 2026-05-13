@@ -54,6 +54,9 @@
   
     // 提醒项目提供者
     [self setReminderProvider];
+
+    // 消息已读上报提供者（私聊已读回执）
+    [self setMessageReadedProvider];
     
     // 群相关接口
     [[WKGroupManager shared] setDelegate:[WKGroupManagerDelegateImp new]];
@@ -62,6 +65,39 @@
     
     [WKChannelDataManager.shared setDelegate:[WKChannelDataManagerDelegateImp new]];
     
+}
+
+// 消息已读提供者，对应付费模块中的 message/readed 接口
+-(void) setMessageReadedProvider {
+    [[[WKSDK shared] receiptManager] setMessageReadedProvider:^(WKChannel *channel, NSArray<WKMessage *> * _Nonnull messages, WKMessageReadedCallback  _Nonnull callback) {
+        // 仅私聊上报已读，群聊不开启已读回执
+        if(channel.channelType != WK_PERSON) {
+            if(callback) {
+                callback(nil);
+            }
+            return;
+        }
+        NSMutableArray<NSString*> *messageIDS = [NSMutableArray array];
+        if(messages.count > 0) {
+            for (WKMessage *message in messages) {
+                [messageIDS addObject:[NSString stringWithFormat:@"%llu", message.messageId]];
+            }
+        }
+        [[WKAPIClient sharedClient] POST:@"message/readed" parameters:@{
+            @"channel_id": channel.channelId ?: @"",
+            @"channel_type": @(channel.channelType),
+            @"message_ids": messageIDS,
+        }].then(^{
+            if(callback) {
+                callback(nil);
+            }
+        }).catch(^(NSError *err){
+            WKLogError(@"消息已读未读上报失败！-> %@", err);
+            if(callback) {
+                callback(err);
+            }
+        });
+    }];
 }
 
 // 模块启动

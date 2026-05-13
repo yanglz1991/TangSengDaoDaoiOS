@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>C617.1</string>
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategorySystemConfiguration</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>35F0.1</string>
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
+
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+
+    <key>NSPrivacyTracking</key>
+    <false/>
+
+    <key>NSPrivacyThirdPartySDKs</key>
+    <array>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.afnetworking.afnetworking</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.sdwebimage.sdwebimage</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.fmdb.fmdb</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.mbprogresshud.mbprogresshud</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.starscream.starscream</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyThirdPartySDKIdentifier</key>
+            <string>com.toast.toast</string>
+        </dict>
+    </array>
+</dict>
+</plist>

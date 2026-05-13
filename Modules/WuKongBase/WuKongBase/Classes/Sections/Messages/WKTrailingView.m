@@ -43,7 +43,9 @@
         self.statusImgView.image = [self getImageNameForBaseModule:@"Conversation/Messages/TimeWait"];
         self.statusImgView.image = [self.statusImgView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }else if(messageModel.isSend && messageModel.status == WK_MESSAGE_SUCCESS) {
-        if(messageModel.message.remoteExtra.readedCount>0) {
+        // 已读双勾仅在私聊显示，群聊不开启该功能
+        BOOL canShowReceipt = messageModel.channel.channelType == WK_PERSON;
+        if(canShowReceipt && messageModel.message.remoteExtra.readedCount>0) {
             self.statusImgView.image = [self getImageNameForBaseModule:@"Conversation/Messages/DoubleCheckmark"];
             self.statusImgView.image = [self.statusImgView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         }else{

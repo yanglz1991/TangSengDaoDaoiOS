@@ -511,8 +511,13 @@
         }
     }
     WKSetting *setting = [WKSetting new];
-    if(self.conversationVM.channelInfo) {
+    // 私聊默认开启已读回执，群聊不开启
+    if(self.channel.channelType == WK_PERSON) {
+        setting.receiptEnabled = YES;
+    } else if(self.conversationVM.channelInfo) {
         setting.receiptEnabled = self.conversationVM.channelInfo.receipt;
+    }
+    if(self.conversationVM.channelInfo) {
         if(self.conversationVM.channelInfo.extra[@"msg_auto_delete"]) {
             setting.expire = [self.conversationVM.channelInfo.extra[@"msg_auto_delete"] integerValue];
         }

@@ -616,11 +616,13 @@
     if(visibleRows && visibleRows.count>0) {
         NSMutableArray<WKMessageModel*> *messagesOfReaded = [NSMutableArray array];
         NSMutableArray<WKMessage*> *messagesOfViewed = [NSMutableArray array];
+        // 仅私聊上报已读，群聊不开启该功能
+        BOOL canReceipt = self.channel.channelType == WK_PERSON;
         for (NSIndexPath *indexPath in visibleRows) {
             CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
             if([self cellIsVisible:rect]) {
                 WKMessageModel *messageModel = [self.dataProvider messageAtIndexPath:indexPath];
-                 if(messageModel.messageId != 0 && !messageModel.isSend && !messageModel.readed && messageModel.message.setting.receiptEnabled) {
+                 if(canReceipt && messageModel.messageId != 0 && !messageModel.isSend && !messageModel.readed && messageModel.message.setting.receiptEnabled) {
                      [messagesOfReaded addObject:messageModel];
                  }
                 if(messageModel.content.flame && messageModel.content.viewedOfVisible && !messageModel.viewed) {

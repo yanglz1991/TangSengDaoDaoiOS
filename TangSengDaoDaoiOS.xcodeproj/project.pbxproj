@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F850E2F2FB353CE00A7314E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2F850E2E2FB353CE00A7314E /* PrivacyInfo.xcprivacy */; };
 		7130BFC524C6817600B9E04B /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7130BFC424C6817600B9E04B /* NotificationService.m */; };
 		7130BFC924C6817600B9E04B /* NotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7130BFC124C6817600B9E04B /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7130BFD424C6832F00B9E04B /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7130BFD324C6832F00B9E04B /* UserNotifications.framework */; };
@@ -76,6 +77,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2F850E2E2FB353CE00A7314E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5CA0841FAD4ACC73F9DC603F /* Pods_TangSengDaoDaoiOSBase_TangSengDaoDaoiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TangSengDaoDaoiOSBase_TangSengDaoDaoiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71018ED405ABC6ED8448075E /* Pods-TangSengDaoDaoiOSBase-TangSengDaoDaoiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TangSengDaoDaoiOSBase-TangSengDaoDaoiOS.release.xcconfig"; path = "Target Support Files/Pods-TangSengDaoDaoiOSBase-TangSengDaoDaoiOS/Pods-TangSengDaoDaoiOSBase-TangSengDaoDaoiOS.release.xcconfig"; sourceTree = "<group>"; };
 		71275E7D240A7BD600A7502C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -282,6 +284,7 @@
 				71DB3FA4239B5DE700181E94 /* WKMainTabController.h */,
 				71DB3FA5239B5DE700181E94 /* WKMainTabController.m */,
 				719FDA5F2595FBFC000C25D6 /* Localizable.strings */,
+				2F850E2E2FB353CE00A7314E /* PrivacyInfo.xcprivacy */,
 			);
 			path = TangSengDaoDao;
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				71D6961323926E3700D092BA /* LaunchScreen.storyboard in Resources */,
+				2F850E2F2FB353CE00A7314E /* PrivacyInfo.xcprivacy in Resources */,
 				719FDA5D2595FBFC000C25D6 /* Localizable.strings in Resources */,
 				71F7E3DC2A47F66900E8D20D /* QUESTION.md in Resources */,
 				71D6961023926E3700D092BA /* Assets.xcassets in Resources */,
@@ -560,7 +564,6 @@
 		7130BFCB24C6817600B9E04B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -584,7 +587,6 @@
 		7130BFCC24C6817600B9E04B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -608,7 +610,6 @@
 		7130BFE324C6832F00B9E04B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -632,7 +633,6 @@
 		7130BFE424C6832F00B9E04B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
