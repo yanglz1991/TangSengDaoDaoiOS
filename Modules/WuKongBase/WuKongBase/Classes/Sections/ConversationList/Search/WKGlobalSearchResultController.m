@@ -125,7 +125,10 @@
         }
         
         
-        if(existFileModule) {
+        // 文件 tab 仅在频道内搜索时显示（频道内走本地 WKMessageDB 查询，可用）。
+        // 首页全局搜索的"文件"依赖未启用的 WuKongIM 全文搜索插件 wk.plugin.search/usersearch，
+        // 实际搜不到结果，因此从首页搜索入口移除该 tab。
+        if(existFileModule && self.vm.searchInChannel) {
             [items addObject:[[WKTabbarItem alloc] initWithTitle:LLang(@"文件") onClick:^{
                 [weakSelf.vm changeTabType:@"file"];
             }]];

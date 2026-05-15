@@ -24,6 +24,7 @@
 #import "WKMOSContentConvertManager.h"
 #import "WKMediaUtil.h"
 #import "WKConversationManager.h"
+#import "WKChannelManager.h"
 #import "WKSignalErrorContent.h"
 #import "WKReactionDB.h"
 #import "WKMessageExtraDB.h"
@@ -323,8 +324,21 @@
 
 -(WKMessage*) forwardMessage:(WKMessageContent*)content channel:(WKChannel*)channel {
     WKMessageStatus messageStatus = WK_MESSAGE_WAITSEND;
+    // 转发消息也需要构造 setting，否则接收方收到的消息 setting.receiptEnabled 为 NO，
+    // 不会触发已读回执，发送方永远看不到已读状态（与 Android 行为对齐）。
+    WKSetting *setting = [WKSetting new];
+    if(channel.channelType == WK_PERSON) {
+        // 私聊默认开启已读回执，与 WKConversationContextImpl 普通发送路径保持一致
+        setting.receiptEnabled = YES;
+    } else {
+        // 群聊按频道设置决定是否开启已读回执
+        WKChannelInfo *channelInfo = [[WKChannelManager shared] getChannelInfo:channel];
+        if(channelInfo) {
+            setting.receiptEnabled = channelInfo.receipt;
+        }
+    }
     //    // 保存消息
-    WKMessage *message = [self saveMessage:content channel:channel fromUid:nil status:messageStatus];
+    WKMessage *message = [self saveMessage:content channel:channel fromUid:nil status:messageStatus setting:setting];
     //    // 发送消息
     return [self sendMessage:message];
 }

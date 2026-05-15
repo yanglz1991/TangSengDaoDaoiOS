@@ -1128,6 +1128,8 @@
 		46EB2E00024CD0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 46EB2E00024CC0 /* PrivacyInfo.xcprivacy */; };
 		46EB2E00024D00 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 46EB2E00024CF0 /* PrivacyInfo.xcprivacy */; };
 		46EB2E00024D30 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 46EB2E00024D20 /* PrivacyInfo.xcprivacy */; };
+		46EB2E00024D50 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 46EB2E00024D20 /* PrivacyInfo.xcprivacy */; };
+		46EB2E00024D80 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 46EB2E00024D70 /* PrivacyInfo.xcprivacy */; };
 		47268D8CA217D04865FD9CA0EB49C11C /* vdrawable.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6B44049DC6D4E01C277ECFF6F955F6 /* vdrawable.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		47303DAA9117CC3BC0A77492AB2130F8 /* ASInternalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BE2F589269891A46877758E932F435B /* ASInternalHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4742C46CC2EFFCBBF34F71A99539E812 /* AsyncDisplayKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CA9D46C92A741F87B565CF47C22954 /* AsyncDisplayKit-dummy.m */; };
@@ -6202,7 +6204,8 @@
 		46EB2E00024C90 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = FMDB/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		46EB2E00024CC0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = MBProgressHUD/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		46EB2E00024CF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = SDWebImage/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		46EB2E00024D20 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Toast/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		46EB2E00024D20 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Starscream/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		46EB2E00024D70 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Toast/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		46EFE6A2210A1A9A9B6309605024D409 /* RACScopedDisposable.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACScopedDisposable.m; path = ReactiveObjC/RACScopedDisposable.m; sourceTree = "<group>"; };
 		46F59FFC0345633A199374D5A50D7CF6 /* NSString+WK.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSString+WK.h"; sourceTree = "<group>"; };
 		46FAB3321F40A0544F7872156EDF7411 /* WKReactionBaseView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WKReactionBaseView.m; sourceTree = "<group>"; };
@@ -11119,10 +11122,18 @@
 			name = SDWebImage;
 			sourceTree = "<group>";
 		};
-		46EB2E00024D10 /* Toast */ = {
+		46EB2E00024D10 /* Starscream */ = {
 			isa = PBXGroup;
 			children = (
 				46EB2E00024D20 /* PrivacyInfo.xcprivacy */,
+			);
+			name = Starscream;
+			sourceTree = "<group>";
+		};
+		46EB2E00024D60 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				46EB2E00024D70 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Toast;
 			sourceTree = "<group>";
@@ -15232,8 +15243,9 @@
 				4DCDDF71912D7718C9CCD7D6C3760F97 /* Pods */,
 				8BFEE982D9AA055D77E2A5F6983218A4 /* Products */,
 				46EB2E00024CE0 /* SDWebImage */,
+				46EB2E00024D10 /* Starscream */,
 				EE85BAEC8FC0BD96904CA5484C604C45 /* Targets Support Files */,
-				46EB2E00024D10 /* Toast */,
+				46EB2E00024D60 /* Toast */,
 			);
 			sourceTree = "<group>";
 		};
@@ -18887,6 +18899,7 @@
 				5DDCE62E33AF3C0EFF7FB2C8BA923C61 /* Sources */,
 				B1435C5AE26DB07C946756E10CFE48A2 /* Frameworks */,
 				922DEA491253FBD805505C6673A5FEC4 /* Copy generated compatibility header */,
+				46EB2E00024D40 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -20191,6 +20204,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		46EB2E00024D40 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46EB2E00024D50 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4727F871041F97CDD46D89B99872BF29 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -20395,7 +20416,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46EB2E00024D30 /* PrivacyInfo.xcprivacy in Resources */,
+				46EB2E00024D80 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20547,6 +20568,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46EB2E00024D30 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

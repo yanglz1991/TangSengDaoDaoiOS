@@ -26,8 +26,8 @@
             <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
             <key>NSPrivacyAccessedAPITypeReasons</key>
             <array>
-                <!-- 35F0.1: 测量 app 内事件间经过的时间 -->
-                <string>35F0.1</string>
+                <!-- 35F9.1: 测量 app 内事件间经过的时间（用于计时器等） -->
+                <string>35F9.1</string>
             </array>
         </dict>
         <dict>
