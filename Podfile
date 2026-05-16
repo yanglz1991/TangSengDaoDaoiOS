@@ -1,6 +1,6 @@
 # Uncomment the next line to define a global platform for your project
  platform :ios, '12.0'
-workspace 'TangSengDaoDaoiOS.xcworkspace'
+workspace 'QXiOS.xcworkspace'
 
 post_install do |installer|
     # 填写你自己的开发者团队的team id
@@ -91,7 +91,7 @@ post_install do |installer|
 end
 
 
-abstract_target 'TangSengDaoDaoiOSBase' do
+abstract_target 'QXiOSBase' do
   
 #  pod 'lottie-ios', '~> 2.5.3'
   pod 'Socket.IO-Client-Swift'
@@ -100,8 +100,8 @@ abstract_target 'TangSengDaoDaoiOSBase' do
   pod 'Aspects'
   pod 'ReactiveObjC'
 
-  target 'TangSengDaoDaoiOS' do
-    project 'TangSengDaoDaoiOS.xcodeproj'
+  target 'QXiOS' do
+    project 'QXiOS.xcodeproj'
     
   use_frameworks!
   pod 'YBImageBrowser/NOSD', :git=>'https://github.com/tangtaoit/YBImageBrowser.git'

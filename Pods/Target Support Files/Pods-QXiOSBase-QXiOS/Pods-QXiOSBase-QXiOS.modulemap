@@ -1,0 +1,6 @@
+framework module Pods_QXiOSBase_QXiOS {
+  umbrella header "Pods-QXiOSBase-QXiOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
