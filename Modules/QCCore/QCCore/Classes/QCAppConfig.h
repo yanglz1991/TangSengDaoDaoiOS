@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy) NSString *appID;
 // 短编号名称
 @property(nonatomic,copy) NSString *shortName;
-// app的 Schema 前缀 例如 wukong (botgate://friend/apply)
+// app的 Schema 前缀 例如 qx (qx://friend/apply)
 @property(nonatomic,copy) NSString *appSchemaPrefix;
 
 // 应用bundleID

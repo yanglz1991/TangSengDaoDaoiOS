@@ -28,9 +28,9 @@
     self = [super init];
     if(self) {
         self.appName = @"QX";
-        self.shortName = @"WuKong ID";
+        self.shortName = @"QX ID";
         self.appID = @""; // appstore的id
-        self.appSchemaPrefix = @"wukong";
+        self.appSchemaPrefix = @"qx";
         self.clusterOn = YES;
         
          // ---------- 基础配置 ----------
@@ -45,7 +45,7 @@
         self.defaultTextColor = [UIColor colorWithRed:49.0f/255.0f green:49.0f/255.0f blue:49.0f/255.0f alpha:1.0f];
         self.imageCacheDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"image"];
         
-        self.fileStorageDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"wukongfiles"];
+        self.fileStorageDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"qxfiles"];
         
         self.imageMaxLimitBytes = 1024 * 500;
         
@@ -88,7 +88,7 @@
         
         self.inviteMsg = [NSString stringWithFormat:@"我正在使用【%@】app，体验还不错。你也赶快来下载玩玩吧！https://www.githubim.cn",self.appName];
         NSString *tempDir= NSTemporaryDirectory();
-        self.videoCacheDir = [tempDir stringByAppendingPathComponent:[NSString stringWithFormat:@"wukong_video_cache"]];
+        self.videoCacheDir = [tempDir stringByAppendingPathComponent:[NSString stringWithFormat:@"qx_video_cache"]];
         [QCFileUtil createDirectoryIfNotExist: self.videoCacheDir];
         
         self.systemUID = @"u_10000";

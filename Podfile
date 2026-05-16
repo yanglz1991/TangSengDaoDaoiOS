@@ -104,14 +104,14 @@ abstract_target 'QXiOSBase' do
     project 'QXiOS.xcodeproj'
     
   use_frameworks!
-  pod 'YBImageBrowser/NOSD', :git=>'https://github.com/tangtaoit/YBImageBrowser.git'
-  pod 'YYImage/WebP', :git => 'https://github.com/tangtaoit/YYImage.git'
-  pod 'AsyncDisplayKit', :git => 'https://github.com/tangtaoit/AsyncDisplayKit.git'
-  pod 'librlottie', :git => 'https://github.com/tangtaoit/librlottie.git'
+  pod 'YBImageBrowser/NOSD', :git=>'https://github.com/qx-team/YBImageBrowser.git'
+  pod 'YYImage/WebP', :git => 'https://github.com/qx-team/YYImage.git'
+  pod 'AsyncDisplayKit', :git => 'https://github.com/qx-team/AsyncDisplayKit.git'
+  pod 'librlottie', :git => 'https://github.com/qx-team/librlottie.git'
   
-  pod 'QCIM',  :path => './Modules/QCIM'   ## QCCore 基础工具包  源码地址 https://github.com/QCIM/QCIM
-#  pod 'QCIM',  :path => '../../../wukongIM/iOS/QCIM'
-#  pod  'QCIM', '~> 1.0.2' ## 源码地址 https://github.com/QCIM/QCIM
+  pod 'QCIM',  :path => './Modules/QCIM'   ## QCCore 基础工具包  源码地址 https://github.com/qx-team/QCIM
+#  pod 'QCIM',  :path => '../../../qxIM/iOS/QCIM'
+#  pod  'QCIM', '~> 1.0.2' ## 源码地址 https://github.com/qx-team/QCIM
   pod 'QCCore',  :path => './Modules/QCCore'   ## QCCore 基础工具包
   pod 'QCAuth', :path => './Modules/QCAuth'  ##  登录模块
   pod 'QCContacts', :path => './Modules/QCContacts'  ## 联系人模块

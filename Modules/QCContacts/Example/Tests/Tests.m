@@ -2,8 +2,8 @@
 //  LiMaoContactsTests.m
 //  LiMaoContactsTests
 //
-//  Created by tangtaoit on 11/30/2019.
-//  Copyright (c) 2019 tangtaoit. All rights reserved.
+//  Created by qx-team on 11/30/2019.
+//  Copyright (c) 2025 QX. All rights reserved.
 //
 
 @import XCTest;

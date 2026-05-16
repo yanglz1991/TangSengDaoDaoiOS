@@ -1,6 +1,6 @@
 # QCData
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCData.svg?style=flat)](https://travis-ci.org/tangtaoit/QCData)
+[![CI Status](https://img.shields.io/travis/qx-team/QCData.svg?style=flat)](https://travis-ci.org/qx-team/QCData)
 [![Version](https://img.shields.io/cocoapods/v/QCData.svg?style=flat)](https://cocoapods.org/pods/QCData)
 [![License](https://img.shields.io/cocoapods/l/QCData.svg?style=flat)](https://cocoapods.org/pods/QCData)
 [![Platform](https://img.shields.io/cocoapods/p/QCData.svg?style=flat)](https://cocoapods.org/pods/QCData)
@@ -22,7 +22,7 @@ pod 'QCData'
 
 ## Author
 
-tangtaoit, tt@wukong.ai
+qx-team, tt@qx.ai
 
 ## License
 

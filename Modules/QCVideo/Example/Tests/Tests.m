@@ -2,8 +2,8 @@
 //  LiMaoSmallVideoTests.m
 //  LiMaoSmallVideoTests
 //
-//  Created by tangtaoit on 04/29/2020.
-//  Copyright (c) 2020 tangtaoit. All rights reserved.
+//  Created by qx-team on 04/29/2020.
+//  Copyright (c) 2025 QX. All rights reserved.
 //
 
 @import XCTest;

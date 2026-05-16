@@ -33,7 +33,7 @@
 			<string>webchat</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>botgate</string>
+				<string>qx</string>
 			</array>
 		</dict>
 	</array>

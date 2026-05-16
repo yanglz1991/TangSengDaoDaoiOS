@@ -17,7 +17,7 @@
 #define SQL_INTEGER  @"INTEGER" //int long integer ...
 #define SQL_REAL     @"REAL" //浮点
 #define SQL_BLOB     @"BLOB" //data
-#define QCKIT_DB_Prefix @"wukongkit_"
+#define QCKIT_DB_Prefix @"qxkit_"
 @implementation QCKitDBConfig
 
 -(instancetype) init {

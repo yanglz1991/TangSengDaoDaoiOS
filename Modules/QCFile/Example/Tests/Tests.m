@@ -2,8 +2,8 @@
 //  LiMaoFileTests.m
 //  LiMaoFileTests
 //
-//  Created by tangtaoit on 05/05/2020.
-//  Copyright (c) 2020 tangtaoit. All rights reserved.
+//  Created by qx-team on 05/05/2020.
+//  Copyright (c) 2025 QX. All rights reserved.
 //
 
 @import XCTest;

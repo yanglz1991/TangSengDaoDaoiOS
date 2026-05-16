@@ -1,6 +1,6 @@
 # QCContacts
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCContacts.svg?style=flat)](https://travis-ci.org/tangtaoit/QCContacts)
+[![CI Status](https://img.shields.io/travis/qx-team/QCContacts.svg?style=flat)](https://travis-ci.org/qx-team/QCContacts)
 [![Version](https://img.shields.io/cocoapods/v/QCContacts.svg?style=flat)](https://cocoapods.org/pods/QCContacts)
 [![License](https://img.shields.io/cocoapods/l/QCContacts.svg?style=flat)](https://cocoapods.org/pods/QCContacts)
 [![Platform](https://img.shields.io/cocoapods/p/QCContacts.svg?style=flat)](https://cocoapods.org/pods/QCContacts)
@@ -22,7 +22,7 @@ pod 'QCContacts'
 
 ## Author
 
-tangtaoit, tt@wukong.ai
+qx-team, tt@qx.ai
 
 ## License
 

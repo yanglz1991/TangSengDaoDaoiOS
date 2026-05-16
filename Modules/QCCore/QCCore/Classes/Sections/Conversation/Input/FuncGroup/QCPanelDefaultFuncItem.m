@@ -74,7 +74,7 @@
     return false;
 }
 - (NSString *)sid {
-    return @"apm.wukong.emoji";
+    return @"apm.qx.emoji";
 }
 
 - (UIImage *)itemIcon {
@@ -98,7 +98,7 @@
 @implementation QCPanelMentionFuncItem
 
 - (NSString *)sid {
-    return @"apm.wukong.mention";
+    return @"apm.qx.mention";
 }
 - (UIImage *)itemIcon {
     return [self getImageNameForBase:@"Conversation/Toolbar/MentionNormal"];
@@ -132,7 +132,7 @@
 
 
 - (NSString *)sid {
-    return @"apm.wukong.voice";
+    return @"apm.qx.voice";
 }
 
 - (UIImage *)itemIcon {
@@ -160,7 +160,7 @@
 
 
 - (NSString *)sid {
-    return @"apm.wukong.image";
+    return @"apm.qx.image";
 }
 
 - (UIImage *)itemIcon {
@@ -181,7 +181,7 @@
 @implementation QCPanelMoreFuncItem
 
 - (NSString *)sid {
-    return @"apm.wukong.more";
+    return @"apm.qx.more";
 }
 
 - (UIImage *)itemIcon {
@@ -208,7 +208,7 @@
 @implementation QCPanelCardFuncItem
 
 - (NSString *)sid {
-    return @"apm.wukong.card";
+    return @"apm.qx.card";
 }
 
 - (UIImage *)itemIcon {

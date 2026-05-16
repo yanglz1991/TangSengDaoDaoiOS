@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-// 悟空IM SDK
+// QX IM SDK
 @interface QCSDK : NSObject
 
 + (QCSDK *)shared;

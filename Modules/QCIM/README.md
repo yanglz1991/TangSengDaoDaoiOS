@@ -2,7 +2,7 @@
 
 ## 说明
 
-本项目是[悟空IM](https://github.com/QCIM/QCIM)端的iOS SDK。
+本项目是[QX IM](https://github.com/qx-team/QCIM)端的iOS SDK。
 
 ## 运行
 

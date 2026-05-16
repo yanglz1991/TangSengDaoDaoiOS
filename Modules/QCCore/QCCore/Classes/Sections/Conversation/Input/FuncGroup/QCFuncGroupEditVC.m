@@ -73,7 +73,7 @@
     NSMutableArray<QCFuncGroupEditItemModel*> *newFuncItems = [NSMutableArray array];
     if(funcItems && funcItems.count>0) {
         for (id<QCPanelFuncItemProto> panelFuncItem in funcItems) {
-            if(![[panelFuncItem sid] isEqualToString:@"apm.wukong.more"]) { // 更多不添加到编辑里
+            if(![[panelFuncItem sid] isEqualToString:@"apm.qx.more"]) { // 更多不添加到编辑里
                 QCFuncGroupEditItemModel *model = [[QCFuncGroupEditItemModel alloc] initWithFuncItem:panelFuncItem];
                 QCAPMSortInfo *sortInfo = self.apmSortDict[model.sid];
                 if(sortInfo) {

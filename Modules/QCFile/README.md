@@ -1,6 +1,6 @@
 # QCFile
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCFile.svg?style=flat)](https://travis-ci.org/tangtaoit/QCFile)
+[![CI Status](https://img.shields.io/travis/qx-team/QCFile.svg?style=flat)](https://travis-ci.org/qx-team/QCFile)
 [![Version](https://img.shields.io/cocoapods/v/QCFile.svg?style=flat)](https://cocoapods.org/pods/QCFile)
 [![License](https://img.shields.io/cocoapods/l/QCFile.svg?style=flat)](https://cocoapods.org/pods/QCFile)
 [![Platform](https://img.shields.io/cocoapods/p/QCFile.svg?style=flat)](https://cocoapods.org/pods/QCFile)
@@ -22,7 +22,7 @@ pod 'QCFile'
 
 ## Author
 
-tangtaoit, tt@tgo.ai
+qx-team, tt@tgo.ai
 
 ## License
 

@@ -1,6 +1,6 @@
 # QCCore
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCCore.svg?style=flat)](https://travis-ci.org/tangtaoit/QCCore)
+[![CI Status](https://img.shields.io/travis/qx-team/QCCore.svg?style=flat)](https://travis-ci.org/qx-team/QCCore)
 [![Version](https://img.shields.io/cocoapods/v/QCCore.svg?style=flat)](https://cocoapods.org/pods/QCCore)
 [![License](https://img.shields.io/cocoapods/l/QCCore.svg?style=flat)](https://cocoapods.org/pods/QCCore)
 [![Platform](https://img.shields.io/cocoapods/p/QCCore.svg?style=flat)](https://cocoapods.org/pods/QCCore)
@@ -22,7 +22,7 @@ pod 'QCCore'
 
 ## Author
 
-tangtaoit
+qx-team
 
 ## License
 

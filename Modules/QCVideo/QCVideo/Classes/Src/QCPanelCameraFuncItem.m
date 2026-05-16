@@ -11,7 +11,7 @@
 @implementation QCPanelCameraFuncItem
 
 - (NSString *)sid {
-    return @"apm.wukong.camera";
+    return @"apm.qx.camera";
 }
 
 - (UIImage *)itemIcon {

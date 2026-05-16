@@ -53,7 +53,7 @@ typedef enum : NSUInteger {
 ///  获取连接地址
 @property(nonatomic,copy) void(^getConnectAddr)(void(^complete)(NSString * __nullable addr));
 /**
- *  连接悟空IM服务器
+ *  连接QX IM服务器
  */
 -(void) connect;
 

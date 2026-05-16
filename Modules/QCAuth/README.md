@@ -1,6 +1,6 @@
 # QCAuth
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCAuth.svg?style=flat)](https://travis-ci.org/tangtaoit/QCAuth)
+[![CI Status](https://img.shields.io/travis/qx-team/QCAuth.svg?style=flat)](https://travis-ci.org/qx-team/QCAuth)
 [![Version](https://img.shields.io/cocoapods/v/QCAuth.svg?style=flat)](https://cocoapods.org/pods/QCAuth)
 [![License](https://img.shields.io/cocoapods/l/QCAuth.svg?style=flat)](https://cocoapods.org/pods/QCAuth)
 [![Platform](https://img.shields.io/cocoapods/p/QCAuth.svg?style=flat)](https://cocoapods.org/pods/QCAuth)
@@ -22,7 +22,7 @@ pod 'QCAuth'
 
 ## Author
 
-tangtaoit, tt@wukong.ai
+qx-team, tt@qx.ai
 
 ## License
 

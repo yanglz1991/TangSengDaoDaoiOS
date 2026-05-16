@@ -6,7 +6,7 @@
 //
 
 #import "QCOptions.h"
-#define WK_DB_Prefix @"wukongim_"
+#define WK_DB_Prefix @"qxim_"
 
 @implementation QCOptions
 
@@ -35,7 +35,7 @@
        self.proto = WK_PROTO_WK;
        self.messageFileRootDir =[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"files"];
        self.dbPrefix = WK_DB_Prefix;
-       self.dbDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"wukongimdb"];
+       self.dbDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"qximdb"];
        self.imageMaxBytes =  1024 * 100; // 100k 缩略图最大大小
        self.syncChannelMessageLimit = 30;
        

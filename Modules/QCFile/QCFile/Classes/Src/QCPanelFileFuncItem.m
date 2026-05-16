@@ -11,7 +11,7 @@
 @implementation QCPanelFileFuncItem
 
 - (NSString *)sid {
-    return @"apm.wukong.file";
+    return @"apm.qx.file";
 }
 
 

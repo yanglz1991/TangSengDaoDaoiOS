@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'QCIM'
   s.version          = '1.1.0'
-  s.summary          = '悟空IM是一款简单，高效，支持完全私有化的即时通讯.'
+  s.summary          = 'QX IM是一款简单，高效，支持完全私有化的即时通讯.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,14 +18,14 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-悟空IM是一款简单，高效，支持完全私有化的即时通讯，提供群聊，点对点通讯解决方案.
+QX IM是一款简单，高效，支持完全私有化的即时通讯，提供群聊，点对点通讯解决方案.
                        DESC
 
-  s.homepage         = 'https://github.com/QCIM/QCIM'
+  s.homepage         = 'https://github.com/qx-team/QCIM'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'tangtaoit' => 'tt@tgo.ai' }
-  s.source           = { :git => "https://github.com/QCIM/QCIM.git" }
+  s.author           = { 'qx-team' => 'tt@tgo.ai' }
+  s.source           = { :git => "https://github.com/qx-team/QCIM.git" }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.platform     = :ios, '11.0'
   s.requires_arc = true

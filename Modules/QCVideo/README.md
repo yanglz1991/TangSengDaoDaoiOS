@@ -1,6 +1,6 @@
 # QCVideo
 
-[![CI Status](https://img.shields.io/travis/tangtaoit/QCVideo.svg?style=flat)](https://travis-ci.org/tangtaoit/QCVideo)
+[![CI Status](https://img.shields.io/travis/qx-team/QCVideo.svg?style=flat)](https://travis-ci.org/qx-team/QCVideo)
 [![Version](https://img.shields.io/cocoapods/v/QCVideo.svg?style=flat)](https://cocoapods.org/pods/QCVideo)
 [![License](https://img.shields.io/cocoapods/l/QCVideo.svg?style=flat)](https://cocoapods.org/pods/QCVideo)
 [![Platform](https://img.shields.io/cocoapods/p/QCVideo.svg?style=flat)](https://cocoapods.org/pods/QCVideo)
@@ -22,7 +22,7 @@ pod 'QCVideo'
 
 ## Author
 
-tangtaoit, tt@tgo.ai
+qx-team, tt@tgo.ai
 
 ## License
 

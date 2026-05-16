@@ -223,10 +223,10 @@
             }
         }
         [newFuncItems sortUsingComparator:^NSComparisonResult(QCPanelDefaultFuncItem  *obj1, QCPanelDefaultFuncItem *obj2) {
-            if([obj1.sid isEqualToString:@"apm.wukong.more"]) {
+            if([obj1.sid isEqualToString:@"apm.qx.more"]) {
                 return NSOrderedDescending;
             }
-            if([obj2.sid isEqualToString:@"apm.wukong.more"]) {
+            if([obj2.sid isEqualToString:@"apm.qx.more"]) {
                 return NSOrderedAscending;
             }
             if(![obj1 allowEdit] && [obj2 allowEdit]) {

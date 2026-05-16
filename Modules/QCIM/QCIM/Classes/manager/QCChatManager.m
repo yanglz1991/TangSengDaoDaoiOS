@@ -525,14 +525,14 @@
 
 - (dispatch_queue_t)handleMessageQueue {
     if(!_handleMessageQueue) {
-        _handleMessageQueue =dispatch_queue_create("im.wukongim.handleMessageQueue", DISPATCH_QUEUE_CONCURRENT);
+        _handleMessageQueue =dispatch_queue_create("im.qxim.handleMessageQueue", DISPATCH_QUEUE_CONCURRENT);
     }
     return _handleMessageQueue;
 }
 
 - (dispatch_queue_t)sendMessageQueue {
     if(!_sendMessageQueue) {
-        _sendMessageQueue = dispatch_queue_create("im.wukongim.sendMessage", DISPATCH_QUEUE_CONCURRENT);
+        _sendMessageQueue = dispatch_queue_create("im.qxim.sendMessage", DISPATCH_QUEUE_CONCURRENT);
     }
     return _sendMessageQueue;
 }

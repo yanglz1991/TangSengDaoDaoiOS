@@ -1,9 +1,9 @@
 //
 //  QCMainTabController.h
-//  TangSengDaoDao
+//  QX
 //
 //  Created by tt on 2019/12/7.
-//  Copyright © 2019 xinbida. All rights reserved.
+//  Copyright © 2025 QX. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
