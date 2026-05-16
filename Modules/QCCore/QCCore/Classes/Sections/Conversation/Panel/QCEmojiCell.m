@@ -1,0 +1,47 @@
+//
+//  QCEmojiCell.m
+//  QCCore
+//
+//  Created by tt on 2020/1/9.
+//
+
+#import "QCEmojiCell.h"
+
+#import "UIView+WK.h"
+
+@interface QCEmojiCell ()
+
+@property(nonatomic,strong) UIImageView *emojiImgView;
+
+@end
+@implementation QCEmojiCell
+
+
++(NSString *)reuseIdentifier
+{
+    return NSStringFromClass(self);
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        self.emojiImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
+        [self addSubview:self.emojiImgView];
+        
+    
+    }
+    return self;
+}
+-(void)setEmoji:(UIImage *)image {
+    self.emojiImgView.image = image;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.emojiImgView.lim_left = self.lim_width/2.0f - self.emojiImgView.lim_width/2.0f;
+    self.emojiImgView.lim_top = self.lim_height/2.0f - self.emojiImgView.lim_height / 2.0f;
+}
+
+@end

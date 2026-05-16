@@ -5,7 +5,7 @@
 //  Created by tt on 2019/11/30.
 //  Copyright © 2019 xinbida. All rights reserved.
 //
-#import <WuKongBase/WuKongBase.h>
+#import <QCCore/QCCore.h>
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 

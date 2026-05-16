@@ -1,0 +1,6 @@
+framework module QCGroup {
+  umbrella header "QCGroup-umbrella.h"
+
+  export *
+  module * { export * }
+}

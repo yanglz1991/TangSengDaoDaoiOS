@@ -1,0 +1,45 @@
+{
+  "name": "QCAuth",
+  "version": "0.1.0",
+  "summary": "A short description of QCAuth.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/tangtaoit/QCAuth",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "tangtaoit": "tt@wukong.ai"
+  },
+  "source": {
+    "git": "https://github.com/tangtaoit/QCAuth.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "source_files": "QCAuth/Classes/**/*",
+  "resource_bundles": {
+    "QCAuth_images": [
+      "QCAuth/Assets/Images.xcassets"
+    ]
+  },
+  "private_header_files": "QCAuth/Classes/Vendor/*.h",
+  "resources": [
+    "QCAuth/Assets/Lang"
+  ],
+  "frameworks": [
+    "UIKit",
+    "MapKit"
+  ],
+  "dependencies": {
+    "QCCore": [],
+    "PromiseKit/CorePromise": [
+      "~> 6.0"
+    ],
+    "Masonry": [],
+    "SDWebImage": [
+      "~> 5.9.1"
+    ]
+  }
+}

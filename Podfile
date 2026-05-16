@@ -109,16 +109,16 @@ abstract_target 'QXiOSBase' do
   pod 'AsyncDisplayKit', :git => 'https://github.com/tangtaoit/AsyncDisplayKit.git'
   pod 'librlottie', :git => 'https://github.com/tangtaoit/librlottie.git'
   
-  pod 'WuKongIMSDK',  :path => './Modules/WuKongIMiOSSDK'   ## WuKongBase 基础工具包  源码地址 https://github.com/WuKongIM/WuKongIMiOSSDK
-#  pod 'WuKongIMSDK',  :path => '../../../wukongIM/iOS/WuKongIMiOSSDK'
-#  pod  'WuKongIMSDK', '~> 1.0.2' ## 源码地址 https://github.com/WuKongIM/WuKongIMiOSSDK
-  pod 'WuKongBase',  :path => './Modules/WuKongBase'   ## WuKongBase 基础工具包
-  pod 'WuKongLogin', :path => './Modules/WuKongLogin'  ##  登录模块
-  pod 'WuKongContacts', :path => './Modules/WuKongContacts'  ## 联系人模块
-  pod 'WuKongDataSource', :path => './Modules/WuKongDataSource'  ## 数据源
-  pod 'WuKongFile', :path => './Modules/WuKongFile'  ## 文件管理
-  pod 'WuKongGroupManager', :path => './Modules/WuKongGroupManager'  ## 群管理
-  pod 'WuKongSmallVideo', :path => './Modules/WuKongSmallVideo'  ## 小视频
+  pod 'QCIM',  :path => './Modules/QCIM'   ## QCCore 基础工具包  源码地址 https://github.com/QCIM/QCIM
+#  pod 'QCIM',  :path => '../../../wukongIM/iOS/QCIM'
+#  pod  'QCIM', '~> 1.0.2' ## 源码地址 https://github.com/QCIM/QCIM
+  pod 'QCCore',  :path => './Modules/QCCore'   ## QCCore 基础工具包
+  pod 'QCAuth', :path => './Modules/QCAuth'  ##  登录模块
+  pod 'QCContacts', :path => './Modules/QCContacts'  ## 联系人模块
+  pod 'QCData', :path => './Modules/QCData'  ## 数据源
+  pod 'QCFile', :path => './Modules/QCFile'  ## 文件管理
+  pod 'QCGroup', :path => './Modules/QCGroup'  ## 群管理
+  pod 'QCVideo', :path => './Modules/QCVideo'  ## 小视频
   end
   
 end

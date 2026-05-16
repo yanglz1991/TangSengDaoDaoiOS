@@ -1,0 +1,6 @@
+framework module QCAuth {
+  umbrella header "QCAuth-umbrella.h"
+
+  export *
+  module * { export * }
+}

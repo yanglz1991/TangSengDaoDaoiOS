@@ -1,0 +1,29 @@
+{
+  "name": "QCData",
+  "version": "0.1.0",
+  "summary": "A short description of QCData.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/tangtaoit/QCData",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "tangtaoit": "tt@wukong.ai"
+  },
+  "source": {
+    "git": "https://github.com/tangtaoit/QCData.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "source_files": "QCData/Classes/**/*",
+  "resources": [
+    "QCData/Assets/Lang"
+  ],
+  "dependencies": {
+    "QCCore": [],
+    "QCIM": []
+  }
+}

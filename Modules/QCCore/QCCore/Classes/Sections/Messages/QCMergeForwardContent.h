@@ -1,0 +1,24 @@
+//
+//  QCMergeForwardContent.h
+//  QCCore
+//
+//  Created by tt on 2020/10/12.
+//
+
+#import <QCIM/QCIM.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface QCMergeForwardContent : QCMessageContent
+
+@property(nonatomic,copy,readonly) NSString *title; // 标题
+
+@property(nonatomic,assign) QCChannelType channelType; // 频道类型
+@property(nonatomic,strong) NSArray<NSDictionary*> *users; // 当channelType=1时有值 聊天用户集合 [{"uid":"xxx","name":"xxx"}]
+@property(nonatomic,strong) NSArray<QCMessage*> *msgs; // 合并的消息集合
+
++(instancetype) msgs:(NSArray<QCMessage*>*)msgs users:(NSArray<NSDictionary*>*)users channelType:(QCChannelType)channelType;
+
+@end
+
+NS_ASSUME_NONNULL_END

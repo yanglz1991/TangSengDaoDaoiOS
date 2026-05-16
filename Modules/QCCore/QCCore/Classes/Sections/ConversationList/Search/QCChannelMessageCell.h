@@ -1,0 +1,27 @@
+//
+//  QCChannelMessageCell.h
+//  QCCore
+//
+//  Created by tt on 2020/8/14.
+//
+
+#import <QCCore/QCCore.h>
+#import "QCFormItemCell.h"
+NS_ASSUME_NONNULL_BEGIN
+
+@interface QCChannelMessageModel : QCFormItemModel
+
+@property(nonatomic,copy) NSString *avatar; // 头像
+@property(nonatomic,copy) NSString *name;
+@property(nonatomic,copy) NSNumber *timestamp;
+@property(nonatomic,copy) NSString *content;
+@property(nonatomic,copy) NSString *keyword;
+
+
+@end
+
+@interface QCChannelMessageCell : QCFormItemCell
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -1,0 +1,6 @@
+framework module QCData {
+  umbrella header "QCData-umbrella.h"
+
+  export *
+  module * { export * }
+}

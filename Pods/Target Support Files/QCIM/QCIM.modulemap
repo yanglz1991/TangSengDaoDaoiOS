@@ -1,0 +1,6 @@
+framework module QCIM {
+  umbrella header "QCIM-umbrella.h"
+
+  export *
+  module * { export * }
+}

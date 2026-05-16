@@ -7,10 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import <WuKongBase/WuKongBase.h>
+#import <QCCore/QCCore.h>
 #import "QCMainTabController.h"
-@import WuKongContacts;
-#import <WuKongBase/QCSyncService.h>
+@import QCContacts;
+#import <QCCore/QCSyncService.h>
 #import "QCMeVC.h"
 
 #import "SELUpdateAlert.h"

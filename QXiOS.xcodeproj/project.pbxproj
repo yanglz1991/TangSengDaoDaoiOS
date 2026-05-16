@@ -842,7 +842,7 @@
 					"-framework",
 					"\"ImageIO\"",
 					"-framework",
-					"\"WuKongBase\"",
+					"\"QCCore\"",
 					"-framework",
 					"\"M80AttributedLabel\"",
 					"-framework",
@@ -874,7 +874,7 @@
 					"-framework",
 					"\"YYImage\"",
 					"-framework",
-					"\"WuKongIMSDK\"",
+					"\"QCIM\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.im.qx;
 				PRODUCT_NAME = QX;
@@ -953,7 +953,7 @@
 					"-framework",
 					"\"ImageIO\"",
 					"-framework",
-					"\"WuKongBase\"",
+					"\"QCCore\"",
 					"-framework",
 					"\"M80AttributedLabel\"",
 					"-framework",
@@ -985,7 +985,7 @@
 					"-framework",
 					"\"YYImage\"",
 					"-framework",
-					"\"WuKongIMSDK\"",
+					"\"QCIM\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.im.qx;
 				PRODUCT_NAME = QX;

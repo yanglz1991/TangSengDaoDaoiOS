@@ -1,0 +1,6 @@
+framework module QCVideo {
+  umbrella header "QCVideo-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,25 @@
+//
+//  QCConversationVC.h
+//  QCCore
+//
+//  Created by tt on 2022/5/18.
+//
+
+#import <UIKit/UIKit.h>
+#import <QCIM/QCIM.h>
+#import "QCBaseVC.h"
+NS_ASSUME_NONNULL_BEGIN
+
+@interface QCConversationVC : QCBaseVC
+
+@property(nonatomic,strong) QCChannel *channel;
+
+/// 定位的orderSeq （如果有值，则会定位到此order_seq的消息）
+@property(nonatomic,assign) uint32_t locationAtOrderSeq;
+
+// 显示最近会话的顶部视图
+-(void) showTopView:(BOOL)show;
+
+@end
+
+NS_ASSUME_NONNULL_END

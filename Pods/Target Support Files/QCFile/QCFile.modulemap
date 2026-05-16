@@ -1,0 +1,6 @@
+framework module QCFile {
+  umbrella header "QCFile-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,6 +1,0 @@
-framework module WuKongGroupManager {
-  umbrella header "WuKongGroupManager-umbrella.h"
-
-  export *
-  module * { export * }
-}

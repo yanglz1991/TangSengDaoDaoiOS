@@ -7,7 +7,7 @@
 //
 
 #import "QCMainTabController.h"
-#import <WuKongBase/WuKongBase.h>
+#import <QCCore/QCCore.h>
 #import <Lottie/Lottie.h>
 #import "QCConversationListVC.h"
 #import "QCContactsVC.h"

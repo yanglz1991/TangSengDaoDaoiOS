@@ -1,0 +1,6 @@
+framework module QCContacts {
+  umbrella header "QCContacts-umbrella.h"
+
+  export *
+  module * { export * }
+}
