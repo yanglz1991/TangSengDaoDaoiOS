@@ -131,9 +131,9 @@ final class ReactionNode: ASDisplayNode {
             }
             
             if largeExpanded {
-                animationNode.setup(source: WKLocalPathAnimatedStickerResourceSource( path: self.item.largeListAnimation.path), width: Int(expandedAnimationFrame.width * 2.0), height: Int(expandedAnimationFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
+                animationNode.setup(source: QCLocalPathAnimatedStickerResourceSource( path: self.item.largeListAnimation.path), width: Int(expandedAnimationFrame.width * 2.0), height: Int(expandedAnimationFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
             } else {
-                animationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: self.item.listAnimation.path), width: Int(expandedAnimationFrame.width * 2.0), height: Int(expandedAnimationFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
+                animationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: self.item.listAnimation.path), width: Int(expandedAnimationFrame.width * 2.0), height: Int(expandedAnimationFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
             }
             animationNode.frame = expandedAnimationFrame
             animationNode.updateLayout(size: expandedAnimationFrame.size)
@@ -207,7 +207,7 @@ final class ReactionNode: ASDisplayNode {
                     self.stillAnimationNode = stillAnimationNode
                     self.addSubnode(stillAnimationNode)
                     
-                    stillAnimationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: self.item.stillAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .loop, mode: .direct(cachePathPrefix: nil))
+                    stillAnimationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: self.item.stillAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .loop, mode: .direct(cachePathPrefix: nil))
                     stillAnimationNode.position = animationFrame.center
                     stillAnimationNode.bounds = CGRect(origin: CGPoint(), size: animationFrame.size)
                     stillAnimationNode.updateLayout(size: animationFrame.size)
@@ -260,14 +260,14 @@ final class ReactionNode: ASDisplayNode {
             if self.animationNode == nil {
                 self.didSetupStillAnimation = true
                 
-                self.staticAnimationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: self.item.stillAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .still(.start), mode: .direct(cachePathPrefix: nil))
+                self.staticAnimationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: self.item.stillAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .still(.start), mode: .direct(cachePathPrefix: nil))
                 self.staticAnimationNode.position = animationFrame.center
                 self.staticAnimationNode.bounds = CGRect(origin: CGPoint(), size: animationFrame.size)
                 self.staticAnimationNode.updateLayout(size: animationFrame.size)
                 self.staticAnimationNode.visibility = true
                 
                 if let animateInAnimationNode = self.animateInAnimationNode {
-                    animateInAnimationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: self.item.appearAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
+                    animateInAnimationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: self.item.appearAnimation.path), width: Int(animationDisplaySize.width * 2.0), height: Int(animationDisplaySize.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
                     animateInAnimationNode.position = animationFrame.center
                     animateInAnimationNode.bounds = CGRect(origin: CGPoint(), size: animationFrame.size)
                     animateInAnimationNode.updateLayout(size: animationFrame.size)

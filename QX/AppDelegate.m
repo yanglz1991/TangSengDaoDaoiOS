@@ -8,10 +8,10 @@
 
 #import "AppDelegate.h"
 #import <WuKongBase/WuKongBase.h>
-#import "WKMainTabController.h"
+#import "QCMainTabController.h"
 @import WuKongContacts;
-#import <WuKongBase/WKSyncService.h>
-#import "WKMeVC.h"
+#import <WuKongBase/QCSyncService.h>
+#import "QCMeVC.h"
 
 #import "SELUpdateAlert.h"
 
@@ -39,9 +39,9 @@
 
 @interface AppDelegate ()<UITabBarControllerDelegate>
 
-@property(nonatomic,strong) WKConversationListVC *conversationList;
-//@property(nonatomic,strong)  WKContactsVC *contactVC;
-@property(nonatomic,strong) WKMeVC *meVC;
+@property(nonatomic,strong) QCConversationListVC *conversationList;
+//@property(nonatomic,strong)  QCContactsVC *contactVC;
+@property(nonatomic,strong) QCMeVC *meVC;
 
 
 @end
@@ -56,10 +56,10 @@
     [self.window makeKeyAndVisible];
 
     // 加载登录信息
-    [[WKApp shared].loginInfo load];
+    [[QCApp shared].loginInfo load];
 
     // app配置
-    WKAppConfig *config = [WKAppConfig new];
+    QCAppConfig *config = [QCAppConfig new];
     config.apiBaseUrl = API_BASE_URL; // api地址
     config.fileBaseUrl = FILE_BASE_URL; // 文件上传地址
     config.fileBrowseUrl = FILE_BROWSE_URL; // 文件预览地址
@@ -67,20 +67,20 @@
     config.reportUrl = [NSString stringWithFormat:@"%@report/html",API_BASE_URL]; //举报地址
     config.privacyAgreementUrl = [NSString stringWithFormat:@"%@privacy_policy.html",WEB_URL]; //隐私协议
     config.userAgreementUrl = [NSString stringWithFormat:@"%@user_agreement.html",WEB_URL]; //用户协议
-    [WKApp shared].config = config;
+    [QCApp shared].config = config;
     
     // app首页设置
-    [WKApp shared].getHomeViewController = ^UIViewController * _Nonnull{
-        WKMainTabController *homeViewController =  [WKMainTabController new];
+    [QCApp shared].getHomeViewController = ^UIViewController * _Nonnull{
+        QCMainTabController *homeViewController =  [QCMainTabController new];
         return homeViewController;
     };
 
    
     // app初始化
-    [[WKApp shared] appInit];
+    [[QCApp shared] appInit];
     
     if (@available(iOS 13.0, *)) {
-        if([WKApp shared].config.style == WKSystemStyleDark) {
+        if([QCApp shared].config.style == QCSystemStyleDark) {
             self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
         }else{
             self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
@@ -106,7 +106,7 @@
 -(void) checkAppVersionOrUpdate {
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    [[WKAPIClient sharedClient] GET:[NSString stringWithFormat:@"common/appversion/iOS/%@",appVersion] parameters:nil].then(^(NSDictionary *resultDict){
+    [[QCAPIClient sharedClient] GET:[NSString stringWithFormat:@"common/appversion/iOS/%@",appVersion] parameters:nil].then(^(NSDictionary *resultDict){
         [[NSUserDefaults standardUserDefaults] setInteger:[[NSDate date] timeIntervalSince1970] forKey:@"lastCheckUpdateTime"];
         NSString *version = resultDict[@"app_version"];
         if(!version||[version isEqualToString:@""]) {
@@ -149,31 +149,31 @@
         };
     NSString *myToken = getDeviceToken();
     NSLog(@"myToken----------->%@",myToken);
-    [WKApp shared].loginInfo.deviceToken = myToken;
-    [[WKApp shared].loginInfo save];
+    [QCApp shared].loginInfo.deviceToken = myToken;
+    [[QCApp shared].loginInfo save];
    NSString *bundleID = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    [[WKAPIClient sharedClient] POST:@"user/device_token" parameters:@{@"device_token":myToken,@"device_type":@"IOS",@"bundle_id":bundleID}].catch(^(NSError *error){
-        WKLogError(@"上传设备token失败！-> %@",error);
+    [[QCAPIClient sharedClient] POST:@"user/device_token" parameters:@{@"device_token":myToken,@"device_type":@"IOS",@"bundle_id":bundleID}].catch(^(NSError *error){
+        QCLogError(@"上传设备token失败！-> %@",error);
     });
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"didReceiveRemoteNotification------>");
-    [WKApp.shared application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+    [QCApp.shared application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 }
 
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    WKLogError(@"注册远程通知失败->%@",error);
+    QCLogError(@"注册远程通知失败->%@",error);
 }
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     
-    return [[WKApp shared] appOpenURL:url options:options];
+    return [[QCApp shared] appOpenURL:url options:options];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
     
-    return [[WKApp shared] appContinueUserActivity:userActivity restorationHandler:restorationHandler];
+    return [[QCApp shared] appContinueUserActivity:userActivity restorationHandler:restorationHandler];
 }
 
 @end

@@ -13,23 +13,23 @@ static void * kTokens = &kTokens;
 
 @implementation UILabel (WK)
 
-- (NSArray<id<WKMatchToken>> *)tokens {
+- (NSArray<id<QCMatchToken>> *)tokens {
     return objc_getAssociatedObject(self, kTokens);
 }
 
--(void) setTokens:(NSArray<id<WKMatchToken>>*)tokens {
+-(void) setTokens:(NSArray<id<QCMatchToken>>*)tokens {
     return objc_setAssociatedObject(self, kTokens, tokens, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(void) setClick:(void(^)(id<WKMatchToken>))click {
+-(void) setClick:(void(^)(id<QCMatchToken>))click {
     objc_setAssociatedObject(self, kClick, click, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
--(void(^)(id<WKMatchToken>)) click {
+-(void(^)(id<QCMatchToken>)) click {
     return objc_getAssociatedObject(self, kClick);
 }
 
--(void) onClick:(void(^)(id<WKMatchToken>))click {
+-(void) onClick:(void(^)(id<QCMatchToken>))click {
     self.click = click;
     
     self.userInteractionEnabled = YES;
@@ -49,7 +49,7 @@ static void * kTokens = &kTokens;
 }
 
 -(void) onTap:(UITapGestureRecognizer*)gesture {
-   id<WKMatchToken> token =  [self didTapAttributedTextInLabel:gesture];
+   id<QCMatchToken> token =  [self didTapAttributedTextInLabel:gesture];
     if(token) {
         if(self.click) {
             self.click(token);
@@ -60,7 +60,7 @@ static void * kTokens = &kTokens;
 
 
 
--(id<WKMatchToken>) didTapAttributedTextInLabel:(UITapGestureRecognizer *)tapGesture {
+-(id<QCMatchToken>) didTapAttributedTextInLabel:(UITapGestureRecognizer *)tapGesture {
     if(!self.tokens || self.tokens.count==0) {
         return false;
     }
@@ -94,7 +94,7 @@ static void * kTokens = &kTokens;
     NSInteger indexOfCharacter = [layoutManager characterIndexForPoint:locationOfTouchInTextContainer
                                                             inTextContainer:textContainer
                                    fractionOfDistanceBetweenInsertionPoints:nil];
-    for (id<WKMatchToken> token in self.tokens) {
+    for (id<QCMatchToken> token in self.tokens) {
         if (NSLocationInRange(indexOfCharacter, token.range)) {
             return token;
         }
@@ -102,7 +102,7 @@ static void * kTokens = &kTokens;
     return nil;
 }
 
--( id<WKMatchToken>) matchDidTapAttributedTextInLabelWithPoint:(CGPoint)locationOfTouchInLabel {
+-( id<QCMatchToken>) matchDidTapAttributedTextInLabelWithPoint:(CGPoint)locationOfTouchInLabel {
     
     if(!self.tokens || self.tokens.count==0) {
         return false;
@@ -136,7 +136,7 @@ static void * kTokens = &kTokens;
     NSInteger indexOfCharacter = [layoutManager characterIndexForPoint:locationOfTouchInTextContainer
                                                             inTextContainer:textContainer
                                    fractionOfDistanceBetweenInsertionPoints:nil];
-    for (id<WKMatchToken> token in self.tokens) {
+    for (id<QCMatchToken> token in self.tokens) {
         if (NSLocationInRange(indexOfCharacter, token.range)) {
             return token;
         }

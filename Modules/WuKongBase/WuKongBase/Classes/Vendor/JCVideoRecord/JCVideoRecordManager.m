@@ -7,7 +7,7 @@
 //
 
 #import "JCVideoRecordManager.h"
-#import <WuKongBase/UIImage+WKResize.h>
+#import <WuKongBase/UIImage+QCResize.h>
 
 #import "WuKongBase.h"
 

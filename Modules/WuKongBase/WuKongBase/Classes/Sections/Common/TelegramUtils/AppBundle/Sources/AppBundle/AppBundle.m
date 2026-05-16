@@ -1,5 +1,5 @@
 #import  "AppBundle.h"
-#import "WKApp.h"
+#import "QCApp.h"
 NSBundle * _Nonnull getAppBundle() {
     NSBundle *bundle = [NSBundle mainBundle];
     if ([[bundle.bundleURL pathExtension] isEqualToString:@"appex"]) {
@@ -16,7 +16,7 @@ NSBundle * _Nonnull getAppBundle() {
 
 - (instancetype _Nullable)initWithBundleImageName:(NSString * _Nonnull)bundleImageName {
 //    return [UIImage imageNamed:bundleImageName inBundle:getAppBundle() compatibleWithTraitCollection:nil];
-    return [WKApp.shared loadImage:bundleImageName moduleID:@"WuKongBase"];
+    return [QCApp.shared loadImage:bundleImageName moduleID:@"WuKongBase"];
 }
 
 @end

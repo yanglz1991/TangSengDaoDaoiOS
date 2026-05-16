@@ -216,7 +216,7 @@ public class TelegramMediaFile {
     
 }
 
-@objc public class WKReactionContextItem:NSObject {
+@objc public class QCReactionContextItem:NSObject {
     @objc public let reaction:String
     @objc public let appearAnimation: WuKongReactionFile
     @objc public let stillAnimation: WuKongReactionFile

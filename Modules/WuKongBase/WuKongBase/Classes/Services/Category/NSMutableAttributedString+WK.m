@@ -8,8 +8,8 @@
 #import "NSMutableAttributedString+WK.h"
 
 #import <objc/runtime.h>
-#import "WKEmoticonService.h"
-#import "WKRemoteImageAttachment.h"
+#import "QCEmoticonService.h"
+#import "QCRemoteImageAttachment.h"
 
 static void * kFontKey = &kFontKey;
 static void * kTextColorKey = &kTextColorKey;
@@ -38,7 +38,7 @@ static void * kLinkColor = &kLinkColor;
     }
     objc_setAssociatedObject(self, kMetionUnderline, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if(self.tokens && self.tokens.count>0) {
-        for (id<WKMatchToken> token in self.tokens) {
+        for (id<QCMatchToken> token in self.tokens) {
             if(token.type == WKatchTokenTypeMetion) {
                 [self removeAttribute:NSUnderlineStyleAttributeName range:token.range];
                 [self addAttribute:NSUnderlineStyleAttributeName value:value range:token.range];
@@ -55,7 +55,7 @@ static void * kLinkColor = &kLinkColor;
 - (void)setMetionColor:(UIColor *)metionColor {
     objc_setAssociatedObject(self, kMetionColor, metionColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if(self.tokens && self.tokens.count>0) {
-        for (id<WKMatchToken> token in self.tokens) {
+        for (id<QCMatchToken> token in self.tokens) {
             if(token.type == WKatchTokenTypeMetion) {
                 [self removeAttribute:NSForegroundColorAttributeName range:token.range];
                 [self addAttribute:NSForegroundColorAttributeName value:metionColor range:token.range];
@@ -76,7 +76,7 @@ static void * kLinkColor = &kLinkColor;
 - (void)setLinkColor:(UIColor *)linkColor {
     objc_setAssociatedObject(self, kLinkColor, linkColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if(self.tokens && self.tokens.count>0) {
-        for (id<WKMatchToken> token in self.tokens) {
+        for (id<QCMatchToken> token in self.tokens) {
             if(token.type == WKatchTokenTypeLink || token.type == WKatchTokenTypeLink2) {
                 [self removeAttribute:NSForegroundColorAttributeName range:token.range];
                 [self addAttribute:NSForegroundColorAttributeName value:linkColor range:token.range];
@@ -92,7 +92,7 @@ static void * kLinkColor = &kLinkColor;
 - (void)setTextColor:(UIColor *)textColor {
     objc_setAssociatedObject(self, kTextColorKey, textColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if(self.tokens && self.tokens.count>0) {
-        for (id<WKMatchToken> token in self.tokens) {
+        for (id<QCMatchToken> token in self.tokens) {
             if(token.type == WKatchTokenTypeText && token.range.location + token.range.length <= self.length) {
                 [self removeAttribute:NSForegroundColorAttributeName range:token.range];
                 [self addAttribute:NSForegroundColorAttributeName value:textColor range:token.range];
@@ -109,11 +109,11 @@ static void * kLinkColor = &kLinkColor;
     return objc_setAssociatedObject(self, kFontKey, font, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSArray<id<WKMatchToken>> *)tokens {
+- (NSArray<id<QCMatchToken>> *)tokens {
     return objc_getAssociatedObject(self, kTokens);
 }
 
--(void) setTokens:(NSArray<id<WKMatchToken>>*)tokens {
+-(void) setTokens:(NSArray<id<QCMatchToken>>*)tokens {
     return objc_setAssociatedObject(self, kTokens, tokens, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
@@ -121,18 +121,18 @@ static void * kLinkColor = &kLinkColor;
     [self lim_parse:text mentionInfo:nil];
 }
 
-- (void)lim_parse:(NSString *)text mentionInfo:(WKMentionedInfo *)mentionInfo options:(WKRichTextParseOptions*)options{
+- (void)lim_parse:(NSString *)text mentionInfo:(QCMentionedInfo *)mentionInfo options:(QCRichTextParseOptions*)options{
     if(!text || [text isEqualToString:@""]) {
            return;
        }
-       NSArray<id<WKMatchToken>> *tokens = [ [WKRichTextParseService shared] parse:text mentionInfo:mentionInfo options:options];
+       NSArray<id<QCMatchToken>> *tokens = [ [QCRichTextParseService shared] parse:text mentionInfo:mentionInfo options:options];
        
-       NSMutableArray<id<WKMatchToken>> *realTokens = [NSMutableArray array]; // 解析完后的字符串真实的token range
-       for(id<WKMatchToken> token in tokens){
+       NSMutableArray<id<QCMatchToken>> *realTokens = [NSMutableArray array]; // 解析完后的字符串真实的token range
+       for(id<QCMatchToken> token in tokens){
            NSRange range;
            if (token.type == WKatchTokenTypeEmoji){
-               WKEmotionToken *emojiToken = (WKEmotionToken*)token;
-               UIImage *image = [[WKEmoticonService shared] emojiImageNamed:emojiToken.imageName];
+               QCEmotionToken *emojiToken = (QCEmotionToken*)token;
+               UIImage *image = [[QCEmoticonService shared] emojiImageNamed:emojiToken.imageName];
                NSInteger location = self.length;
                if(image){
                    [self appendImage:image size:CGSizeMake(24.0f, 24.0f)];
@@ -153,10 +153,10 @@ static void * kLinkColor = &kLinkColor;
 }
 
 
--(void) lim_render:(NSString *)text tokens:(NSArray<id<WKMatchToken>>*)tokens {
+-(void) lim_render:(NSString *)text tokens:(NSArray<id<QCMatchToken>>*)tokens {
     if(!tokens || tokens.count == 0) {
        NSRange range = [self appendText:text];
-        WKDefaultToken *token = [WKDefaultToken new];
+        QCDefaultToken *token = [QCDefaultToken new];
         token.range = range;
         token.text = text;
         token.type = WKatchTokenTypeText;
@@ -164,7 +164,7 @@ static void * kLinkColor = &kLinkColor;
         return;
     }
     
-    tokens = [tokens sortedArrayUsingComparator:^NSComparisonResult(id<WKMatchToken>  _Nonnull obj1, id<WKMatchToken>  _Nonnull obj2) {
+    tokens = [tokens sortedArrayUsingComparator:^NSComparisonResult(id<QCMatchToken>  _Nonnull obj1, id<QCMatchToken>  _Nonnull obj2) {
         if(obj1.range.location>obj2.range.location) {
             return NSOrderedDescending;
         }
@@ -174,9 +174,9 @@ static void * kLinkColor = &kLinkColor;
         return NSOrderedAscending;
     }];
     NSMutableArray *newtokens = [NSMutableArray array];
-    id<WKMatchToken> preToken;
+    id<QCMatchToken> preToken;
     for (NSInteger i=0; i<tokens.count; i++) {
-        id<WKMatchToken> token = tokens[i];
+        id<QCMatchToken> token = tokens[i];
         if(!preToken) {
             if(token.range.location>0) {
                 NSRange range = NSMakeRange(0, token.range.location);
@@ -184,7 +184,7 @@ static void * kLinkColor = &kLinkColor;
                     NSLog(@"------");
                 }else {
                     NSString *tokenText = [text substringWithRange:range];
-                    [newtokens addObject:[WKDefaultToken text:tokenText range:range type:WKatchTokenTypeText]];
+                    [newtokens addObject:[QCDefaultToken text:tokenText range:range type:WKatchTokenTypeText]];
                 }
                
             }
@@ -192,7 +192,7 @@ static void * kLinkColor = &kLinkColor;
             if(token.range.location > preToken.range.location + preToken.range.length) {
                 NSRange range = NSMakeRange(preToken.range.location + preToken.range.length, token.range.location - (preToken.range.location + preToken.range.length));
                 NSString *tokenText = [text substringWithRange:range];
-                [newtokens addObject:[WKDefaultToken text:tokenText range:range type:WKatchTokenTypeText]];
+                [newtokens addObject:[QCDefaultToken text:tokenText range:range type:WKatchTokenTypeText]];
             }
         }
         [newtokens addObject:token];
@@ -201,16 +201,16 @@ static void * kLinkColor = &kLinkColor;
         if(i == tokens.count-1 && text.length > token.range.location + token.range.length) {
             NSUInteger start = token.range.location + token.range.length;
             NSString *tokenText = [text substringFromIndex:start];
-            [newtokens addObject:[WKDefaultToken text:tokenText range:NSMakeRange(start, text.length) type:WKatchTokenTypeText]];
+            [newtokens addObject:[QCDefaultToken text:tokenText range:NSMakeRange(start, text.length) type:WKatchTokenTypeText]];
         }
     }
     
-    NSMutableArray<id<WKMatchToken>> *realTokens = [NSMutableArray array]; // 解析完后的字符串真实的token range
-    for(id<WKMatchToken> token in newtokens){
+    NSMutableArray<id<QCMatchToken>> *realTokens = [NSMutableArray array]; // 解析完后的字符串真实的token range
+    for(id<QCMatchToken> token in newtokens){
         NSRange range;
         if (token.type == WKatchTokenTypeEmoji){
-            WKEmotionToken *emojiToken = (WKEmotionToken*)token;
-            UIImage *image = [[WKEmoticonService shared] emojiImageNamed:emojiToken.imageName];
+            QCEmotionToken *emojiToken = (QCEmotionToken*)token;
+            UIImage *image = [[QCEmoticonService shared] emojiImageNamed:emojiToken.imageName];
             NSInteger location = self.length;
             if(image){
                 [self appendImage:image size:CGSizeMake(24.0f, 24.0f)];
@@ -232,7 +232,7 @@ static void * kLinkColor = &kLinkColor;
         } else {
             range = [self appendText:token.text];
         }
-        id<WKMatchToken> newToken = [(WKDefaultToken*)token copy];
+        id<QCMatchToken> newToken = [(QCDefaultToken*)token copy];
         newToken.range = range;
         [realTokens addObject:newToken];
     }
@@ -240,7 +240,7 @@ static void * kLinkColor = &kLinkColor;
     self.tokens = realTokens;
 }
 
-- (void)lim_parse:(NSString *)text mentionInfo:(WKMentionedInfo *)mentionInfo {
+- (void)lim_parse:(NSString *)text mentionInfo:(QCMentionedInfo *)mentionInfo {
     [self lim_parse:text mentionInfo:mentionInfo options:nil];
 }
 
@@ -291,7 +291,7 @@ static void * kLinkColor = &kLinkColor;
     return NSMakeRange(self.length-text.length, text.length);
 }
 
--(NSRange) appendLink:(WKDefaultToken*)token{
+-(NSRange) appendLink:(QCDefaultToken*)token{
     if(!token || !token.text) {
         return NSMakeRange(self.length,0);
     }
@@ -303,7 +303,7 @@ static void * kLinkColor = &kLinkColor;
     return range;
 }
 
--(NSRange) appendLink2:(WKLinkToken*)token{
+-(NSRange) appendLink2:(QCLinkToken*)token{
     if(!token || !token.linkText) {
         return NSMakeRange(self.length,0);
     }
@@ -314,8 +314,8 @@ static void * kLinkColor = &kLinkColor;
     return range;
 }
 
--(NSRange) appendMetion:(WKMetionToken*)token {
-    WKChannelInfo *metionChannelInfo = [WKSDK.shared.channelManager getCache:[WKChannel personWithChannelID:token.uid]];
+-(NSRange) appendMetion:(QCMetionToken*)token {
+    QCChannelInfo *metionChannelInfo = [QCSDK.shared.channelManager getCache:[QCChannel personWithChannelID:token.uid]];
     NSInteger len = 0;
     if(metionChannelInfo && metionChannelInfo.remark && ![metionChannelInfo.remark isEqualToString:@""]) {
         NSString *mentionText = [NSString stringWithFormat:@"@%@",metionChannelInfo.remark];
@@ -340,21 +340,21 @@ static void * kLinkColor = &kLinkColor;
     return range;
 }
 
--(NSRange) appendBold:(WKBoldToken*)token {
+-(NSRange) appendBold:(QCBoldToken*)token {
     NSRange range = [self appendText:token.boldText?:@""];
-    [self addAttribute:NSFontAttributeName value:[WKApp.shared.config appFontOfSizeMedium:self.font.pointSize] range:range];
+    [self addAttribute:NSFontAttributeName value:[QCApp.shared.config appFontOfSizeMedium:self.font.pointSize] range:range];
     return range;
 }
 
--(NSRange) appendColor:(WKColorToken*)token {
+-(NSRange) appendColor:(QCColorToken*)token {
     NSRange range = [self appendText:token.text?:@""];
     [self addAttribute:NSForegroundColorAttributeName value:token.color range:range];
     return range;
 }
 
--(NSRange) appendRemoteImage:(WKRemoteImageToken*)token {
+-(NSRange) appendRemoteImage:(QCRemoteImageToken*)token {
     NSRange range =  [self appendText:token.text];
-    WKRemoteImageAttachment *imageAttachMent = [[WKRemoteImageAttachment alloc] initWithURL:token.url displaySize:token.size];
+    QCRemoteImageAttachment *imageAttachMent = [[QCRemoteImageAttachment alloc] initWithURL:token.url displaySize:token.size];
     
     
     [self addAttribute:NSAttachmentAttributeName value:imageAttachMent range:range];

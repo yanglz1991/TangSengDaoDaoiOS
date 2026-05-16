@@ -14,7 +14,7 @@
 #import "CWVoiceView.h"
 #import "CWVoiceChangePlayView.h"
 #import "CWFlieManager.h"
-#import "WKApp.h"
+#import "QCApp.h"
 //----------------------变声界面---------------------------------//
 
 @interface CWChangeVoiceView()<CWRecorderDelegate>
@@ -198,8 +198,8 @@
     }
 }
 -(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 
 @end

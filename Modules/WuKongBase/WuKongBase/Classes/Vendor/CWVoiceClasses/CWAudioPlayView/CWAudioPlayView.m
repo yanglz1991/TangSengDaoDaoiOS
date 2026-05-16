@@ -13,7 +13,7 @@
 #import "CWRecordModel.h"
 #import "CWRecorder.h"
 #import "CWVoiceView.h"
-#import "WKResource.h"
+#import "QCResource.h"
 #import "WuKongBase.h"
 @interface CWAudioPlayView ()
 
@@ -42,7 +42,7 @@
 
 - (void)setupSubViews {
     
-    self.backgroundColor = WKApp.shared.config.backgroundColor;
+    self.backgroundColor = QCApp.shared.config.backgroundColor;
     [self stateView];
     [self playButton];
     [self setupSendButtonAndCancelButton];
@@ -175,8 +175,8 @@
 }
 
 -(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 
 @end

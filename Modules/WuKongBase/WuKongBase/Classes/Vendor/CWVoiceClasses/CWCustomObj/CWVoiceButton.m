@@ -8,7 +8,7 @@
 
 #import "CWVoiceButton.h"
 #import "UIView+CWChat.h"
-#import "WKApp.h"
+#import "QCApp.h"
 @implementation CWVoiceButton
 
 + (instancetype)buttonWithBackImageNor:(NSString *)backImageNor backImageSelected:(NSString *)backImageSelected imageNor:(NSString *)imageNor imageSelected:(NSString *)imageSelected frame:(CGRect)frame isMicPhone:(BOOL)isMicPhone{
@@ -35,7 +35,7 @@
 }
 
 +(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
 }
 
 

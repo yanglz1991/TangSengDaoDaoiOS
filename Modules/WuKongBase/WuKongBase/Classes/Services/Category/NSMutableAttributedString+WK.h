@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WKApp.h"
-#import "WKRichTextParseService.h"
+#import "QCApp.h"
+#import "QCRichTextParseService.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSMutableAttributedString (WK)
@@ -19,13 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) BOOL metionUnderline; //是否显示下划线
 
 
-@property(nonatomic,strong) NSArray<id<WKMatchToken>> *tokens;
+@property(nonatomic,strong) NSArray<id<QCMatchToken>> *tokens;
 
 - (void)lim_parse:(NSString *)text;
-- (void)lim_parse:(NSString *)text mentionInfo:(WKMentionedInfo* __nullable)mentionInfo;
-- (void)lim_parse:(NSString *)text mentionInfo:(WKMentionedInfo *__nullable)mentionInfo options:(WKRichTextParseOptions*__nullable)options;
+- (void)lim_parse:(NSString *)text mentionInfo:(QCMentionedInfo* __nullable)mentionInfo;
+- (void)lim_parse:(NSString *)text mentionInfo:(QCMentionedInfo *__nullable)mentionInfo options:(QCRichTextParseOptions*__nullable)options;
 
--(void) lim_render:(NSString *)text tokens:(NSArray<id<WKMatchToken>>*)tokens;
+-(void) lim_render:(NSString *)text tokens:(NSArray<id<QCMatchToken>>*)tokens;
 
 
 // 最后一行的宽度

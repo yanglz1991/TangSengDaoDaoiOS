@@ -593,7 +593,7 @@ public final class ReactionContextNode: ASDisplayNode, UIScrollViewDelegate {
             additionalAnimation = itemNode.item.applicationAnimation
         }
 
-        additionalAnimationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: additionalAnimation.path), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
+        additionalAnimationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: additionalAnimation.path), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
         additionalAnimationNode.frame = effectFrame
         additionalAnimationNode.updateLayout(size: effectFrame.size)
         self.addSubnode(additionalAnimationNode)
@@ -991,7 +991,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
             additionalAnimation = itemNode.item.applicationAnimation
         }
 
-        additionalAnimationNode.setup(source: WKLocalPathAnimatedStickerResourceSource(path: additionalAnimation.path), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
+        additionalAnimationNode.setup(source: QCLocalPathAnimatedStickerResourceSource(path: additionalAnimation.path), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: nil))
         additionalAnimationNode.frame = effectFrame
         additionalAnimationNode.updateLayout(size: effectFrame.size)
         self.addSubnode(additionalAnimationNode)

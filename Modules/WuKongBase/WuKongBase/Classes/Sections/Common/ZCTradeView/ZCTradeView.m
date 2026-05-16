@@ -35,7 +35,7 @@
 #import "ZCTradeInputView.h"
 #import "UIAlertView+Quick.h"
 #import "ZCCustomKeyBoardView.h"
-#import "WKApp.h"
+#import "QCApp.h"
 
 
 @interface ZCTradeView () <UIAlertViewDelegate, ZCTradeInputViewDelegate, UITextFieldDelegate, CustomNumberKeyBoardDelegate>

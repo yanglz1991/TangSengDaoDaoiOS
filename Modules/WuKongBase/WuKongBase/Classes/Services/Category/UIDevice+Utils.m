@@ -7,7 +7,7 @@
 
 
 #import "UIDevice+Utils.h"
-#import "WKKeychainUtil.h"
+#import "QCKeychainUtil.h"
 
 
 
@@ -17,11 +17,11 @@
 {
     NSString * bundleId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
     NSString * tmpID = [NSString stringWithFormat:@"%@_UUID",bundleId];
-    NSData * tmpData = [WKKeychainUtil searchKeychainCopyMatchingIdentifier:tmpID];
+    NSData * tmpData = [QCKeychainUtil searchKeychainCopyMatchingIdentifier:tmpID];
     if (!tmpData)
     {
         NSString * uuid = [UIDevice currentDevice].identifierForVendor.UUIDString;
-        [WKKeychainUtil createKeychainValue:uuid
+        [QCKeychainUtil createKeychainValue:uuid
                                          forIdentifier:tmpID];
         return uuid;
         

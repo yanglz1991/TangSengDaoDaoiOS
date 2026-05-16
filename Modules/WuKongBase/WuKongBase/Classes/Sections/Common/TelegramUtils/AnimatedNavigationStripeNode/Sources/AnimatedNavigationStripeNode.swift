@@ -97,7 +97,7 @@ public final class AnimatedNavigationStripeNode: ASDisplayNode {
         animationTransition.updateFrame(node: self, frame: lineFrame)
         
         self.update(colors: AnimatedNavigationStripeNode.Colors(
-            foreground: WKApp.shared().config.themeColor, background: WKApp.shared().config.themeColor.withAlphaComponent(0.5), clearBackground: WKApp.shared().config.cellBackgroundColor), configuration: AnimatedNavigationStripeNode.Configuration(height: panelHeight, index: index, count: count), transition: animationTransition)
+            foreground: QCApp.shared().config.themeColor, background: QCApp.shared().config.themeColor.withAlphaComponent(0.5), clearBackground: QCApp.shared().config.cellBackgroundColor), configuration: AnimatedNavigationStripeNode.Configuration(height: panelHeight, index: index, count: count), transition: animationTransition)
     }
     
     public func update(colors: Colors, configuration: Configuration, transition: ContainedViewLayoutTransition) {

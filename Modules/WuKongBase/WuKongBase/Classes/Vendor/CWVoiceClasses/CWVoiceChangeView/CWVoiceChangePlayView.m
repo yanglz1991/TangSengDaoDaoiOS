@@ -14,7 +14,7 @@
 #import "CWVoiceView.h"
 #import "CWRecorder.h"
 #import "CWFlieManager.h"
-#import "WKApp.h"
+#import "QCApp.h"
 @interface CWVoiceChangePlayView()
 
 @property (nonatomic, weak) UIButton *cancelButton; // 取消按钮
@@ -176,7 +176,7 @@
 }
 
 -(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 @end

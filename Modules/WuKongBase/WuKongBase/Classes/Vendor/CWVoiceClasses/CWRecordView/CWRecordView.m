@@ -14,7 +14,7 @@
 #import "CWRecorder.h"
 #import "CWVoiceView.h"
 #import "CWFlieManager.h"
-#import "WKResource.h"
+#import "QCResource.h"
 //----------------------录音界面---------------------------------//
 @interface CWRecordView ()<CWRecorderDelegate>
 @property (nonatomic, weak) CWRecordStateView *stateView;
@@ -127,6 +127,6 @@
     }
 }
 -(UIImage*) imageName:(NSString*)name {
-    return [[WKResource shared] imageNamed:name inClass:self.class];
+    return [[QCResource shared] imageNamed:name inClass:self.class];
 }
 @end

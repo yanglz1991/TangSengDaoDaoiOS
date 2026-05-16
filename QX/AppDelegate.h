@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WKAppInstall : NSObject
+@interface QCAppInstall : NSObject
 
 
 

@@ -8,7 +8,7 @@
 
 #import "CWRecorder.h"
 #define ALPHA 0.02f                 // 音频振幅调解相对值 (越小振幅就越高)
-#import "WKRNNoise.h"
+#import "QCRNNoise.h"
 #import <WuKongIMSDK/WuKongIMSDK.h>
 @interface CWRecorder ()
 
@@ -108,11 +108,11 @@ singtonImplement(CWRecorder);
 //    NSLog(@"recordForNoNoise----1>%@",self.recordPath);
 //    NSString *recordForNoNoise = [NSString stringWithFormat:@"%@_nonoise",self.recordPath];
 //    
-//    NSError *error = [WKRNNoise.shared rnnoiseProcess:self.recordPath saveFilePath:recordForNoNoise];
+//    NSError *error = [QCRNNoise.shared rnnoiseProcess:self.recordPath saveFilePath:recordForNoNoise];
 //    if(!error) {
 //        NSLog(@"recordForNoNoise----2>%@",recordForNoNoise);
-//        [WKFileUtil removeFileOfPath:self.recordPath];
-//        [WKFileUtil moveFileFromPath:recordForNoNoise toPath:self.recordPath];
+//        [QCFileUtil removeFileOfPath:self.recordPath];
+//        [QCFileUtil moveFileFromPath:recordForNoNoise toPath:self.recordPath];
 //    }
     
     

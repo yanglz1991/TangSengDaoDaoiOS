@@ -11,8 +11,8 @@
 #import "JCRecordPlayerView.h"
 #import "JCVideoRecordProgressView.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "WKPermissionShowAlertView.h"
-#import "WKResource.h"
+#import "QCPermissionShowAlertView.h"
+#import "QCResource.h"
 #import "WuKongBase.h"
 #define TUIScreenWidth                              [UIScreen mainScreen].bounds.size.width
 #define TRGB(r,g,b)  [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0f];
@@ -71,7 +71,7 @@
 }
 #pragma mark----权限设置
 -(void)permissionSetting{
-    WKPermissionShowAlertView * showAlertView  =  [[WKPermissionShowAlertView alloc]init];
+    QCPermissionShowAlertView * showAlertView  =  [[QCPermissionShowAlertView alloc]init];
     showAlertView.currentPresentVC =self;
     __weak typeof(self) weakSelf = self;
     if ([showAlertView requesetRecordPermission]) {
@@ -348,7 +348,7 @@
     if (error == nil) {
     } else {
         if (error){
-            WKPermissionShowAlertView * showAlertView = [[WKPermissionShowAlertView alloc]init];
+            QCPermissionShowAlertView * showAlertView = [[QCPermissionShowAlertView alloc]init];
             [showAlertView showPermissionSetting:LLang(@"请在iPhone的“设置-隐私”选项中，允许访问你的相册")];
         }
     }
@@ -433,8 +433,8 @@
 
 
 -(UIImage*) imageName:(NSString*)name{
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 
 /**

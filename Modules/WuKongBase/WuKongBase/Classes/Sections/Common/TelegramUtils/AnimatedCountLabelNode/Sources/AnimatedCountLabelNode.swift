@@ -85,10 +85,10 @@ public class AnimatedCountLabelNode: ASDisplayNode {
     
     @objc public func setPinnedTitle(left:CGFloat,width:CGFloat,title:String,index:Int,showNum:Bool) {
        var titleStrings: [AnimatedCountLabelNode.Segment] = []
-        titleStrings.append(.text(0, NSAttributedString(string:title, font: Font.medium(15.0), textColor: WKApp.shared().config.themeColor)))
+        titleStrings.append(.text(0, NSAttributedString(string:title, font: Font.medium(15.0), textColor: QCApp.shared().config.themeColor)))
         if(showNum) {
-            titleStrings.append(.text(1, NSAttributedString(string: " #", font: Font.medium(15.0), textColor: WKApp.shared().config.themeColor)))
-            titleStrings.append(.number(index + 1, NSAttributedString(string: "\(index + 1)", font: Font.medium(15.0), textColor: WKApp.shared().config.themeColor)))
+            titleStrings.append(.text(1, NSAttributedString(string: " #", font: Font.medium(15.0), textColor: QCApp.shared().config.themeColor)))
+            titleStrings.append(.number(index + 1, NSAttributedString(string: "\(index + 1)", font: Font.medium(15.0), textColor: QCApp.shared().config.themeColor)))
            
         }
         

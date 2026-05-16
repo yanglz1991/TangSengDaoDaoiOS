@@ -24,13 +24,13 @@
 "选择成员"="Select member";
 
 
-// WKGroupManagerVC
+// QCGroupManagerVC
 
 "取消“%@”的管理员身份？"="Cancel the administrator status of \"%@\"?";
 "你将自动放弃群主身份。"="You will automatically give up your identity as the group owner.";
 "选择新的群主"="Choose a new owner";
 
-// WKGroupManagerVM
+// QCGroupManagerVM
 
 "添加管理员"="Add Manager";
 "群主、管理员"="Group owner, administrator";
@@ -46,7 +46,7 @@
 "开启后，群成员无法通过该群添加好友。"="After it is turned on, group members cannot add friends through the group.";
 "开启后，新加入聊天的成员能看见以前的聊天记录。"="When enabled, new members who join the chat can see the previous chat history.";
 
-// WKGroupApprovalListVC / WKGroupApprovalListVM
+// QCGroupApprovalListVC / QCGroupApprovalListVM
 "审批记录"="Approval Records";
 "待审批"="Pending";
 "暂无待审批的入群邀请"="No invitations pending approval";

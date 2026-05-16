@@ -7,27 +7,27 @@
 
 
 #import <Foundation/Foundation.h>
-#import "WKOptions.h"
-#import "WKConnectionManager.h"
-#import "WKCoder.h"
-#import "WKPakcetBodyCoderManager.h"
-#import "WKChatManager.h"
-#import "WKPinnedMessageManager.h"
-#import "WKMessageContent.h"
-#import "WKConversationManager.h"
-#import "WKChannelManager.h"
-#import "WKMediaManager.h"
-#import "WKMessageFileUploadTask.h"
-#import "WKMessageFileDownloadTask.h"
-#import "WKTaskManager.h"
-#import "WKCMDManager.h"
-#import "WKReceiptManager.h"
-#import "WKTaskOperator.h"
-#import "WKReactionManager.h"
-#import "WKRobotManager.h"
-#import "WKReminderManager.h"
-#import "WKFlameManager.h"
-#import "WKConst.h"
+#import "QCOptions.h"
+#import "QCConnectionManager.h"
+#import "QCCoder.h"
+#import "QCPakcetBodyCoderManager.h"
+#import "QCChatManager.h"
+#import "QCPinnedMessageManager.h"
+#import "QCMessageContent.h"
+#import "QCConversationManager.h"
+#import "QCChannelManager.h"
+#import "QCMediaManager.h"
+#import "QCMessageFileUploadTask.h"
+#import "QCMessageFileDownloadTask.h"
+#import "QCTaskManager.h"
+#import "QCCMDManager.h"
+#import "QCReceiptManager.h"
+#import "QCTaskOperator.h"
+#import "QCReactionManager.h"
+#import "QCRobotManager.h"
+#import "QCReminderManager.h"
+#import "QCFlameManager.h"
+#import "QCConst.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param error 错误
  */
-typedef void (^WKChannelInfoCallback)(NSError * _Nullable error,bool notifyBefore);
+typedef void (^QCChannelInfoCallback)(NSError * _Nullable error,bool notifyBefore);
 
 
 /**
@@ -47,21 +47,21 @@ typedef void (^WKChannelInfoCallback)(NSError * _Nullable error,bool notifyBefor
  @param more 是否还有更多消息
  @param error 错误信息
  */
-typedef void(^WKOfflineMessageCallback)(NSArray<WKMessage*>* __nullable messages,bool more,NSError * __nullable error);
+typedef void(^QCOfflineMessageCallback)(NSArray<QCMessage*>* __nullable messages,bool more,NSError * __nullable error);
 
 /**
  离线消息ack回调
  @param messageSeq 最后收到的消息序列号
  */
 
-typedef void(^WKOfflineMessageAck)(uint32_t messageSeq,void(^complete)(NSError *error));
+typedef void(^QCOfflineMessageAck)(uint32_t messageSeq,void(^complete)(NSError *error));
 
 
 /**
  用户信息提供者 （第三方需要设置）
 
  */
-typedef WKTaskOperator* _Nullable (^WKChannelInfoUpdate)(WKChannel *channel,WKChannelInfoCallback callback);
+typedef QCTaskOperator* _Nullable (^QCChannelInfoUpdate)(QCChannel *channel,QCChannelInfoCallback callback);
 
 
 /**
@@ -71,6 +71,6 @@ typedef WKTaskOperator* _Nullable (^WKChannelInfoUpdate)(WKChannel *channel,WKCh
  @param messageSeq <#messageSeq description#>
  @param callback <#callback description#>
  */
-typedef void (^WKOfflineMessagePull)(int limit,uint32_t messageSeq,WKOfflineMessageCallback callback);
+typedef void (^QCOfflineMessagePull)(int limit,uint32_t messageSeq,QCOfflineMessageCallback callback);
 
 NS_ASSUME_NONNULL_END

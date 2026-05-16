@@ -7,8 +7,8 @@
 //
 
 #import "UIBarButtonItem+WK.h"
-#import "UIImage+WKShortCut.h"
-#import "WKApp.h"
+#import "UIImage+QCShortCut.h"
+#import "QCApp.h"
 @implementation UIBarButtonItem (WK)
 
 + (UIBarButtonItem *)itemWithTarget:(id)target
@@ -100,8 +100,8 @@
     [button setImage:higeLightedImage forState:UIControlStateHighlighted];
   }
   [button setTitle:title forState:UIControlStateNormal];
-  [button setTitleColor:[WKApp shared].config.navBarButtonColor forState:UIControlStateNormal];
-  button.titleLabel.font = [WKApp shared].config.navBarTitleFont;
+  [button setTitleColor:[QCApp shared].config.navBarButtonColor forState:UIControlStateNormal];
+  button.titleLabel.font = [QCApp shared].config.navBarTitleFont;
   button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
   //    [button sizeToFit];
   if (button.bounds.size.width < 40) {
@@ -133,8 +133,8 @@
 
   UIButton *button = [UIButton buttonWithType:buttonType];
   [button setTitle:title forState:UIControlStateNormal];
-  [button setTitleColor:[WKApp shared].config.navBarButtonColor forState:UIControlStateNormal];
-  button.titleLabel.font = [WKApp shared].config.navBarTitleFont;
+  [button setTitleColor:[QCApp shared].config.navBarButtonColor forState:UIControlStateNormal];
+  button.titleLabel.font = [QCApp shared].config.navBarTitleFont;
   button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
   //    [button sizeToFit];
   if (button.bounds.size.width < 40) {
@@ -202,7 +202,7 @@
   button.contentHorizontalAlignment = NSTextAlignmentRight;
     button.titleLabel.font = [UIFont systemFontOfSize:17.0f];
   button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-  [button setTitleColor:titleColor ? titleColor : [WKApp shared].config.navBarButtonColor
+  [button setTitleColor:titleColor ? titleColor : [QCApp shared].config.navBarButtonColor
                forState:UIControlStateNormal];
   [button setTitleColor:highlightedColor ? highlightedColor : nil
                forState:UIControlStateHighlighted];

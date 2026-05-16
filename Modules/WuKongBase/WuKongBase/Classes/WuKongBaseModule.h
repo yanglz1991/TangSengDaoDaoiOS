@@ -5,11 +5,11 @@
 //  Created by tt on 2022/9/25.
 //
 
-#import "WKBaseModule.h"
+#import "QCBaseModule.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WuKongBaseModule : WKBaseModule
+@interface WuKongBaseModule : QCBaseModule
 
 @end
 

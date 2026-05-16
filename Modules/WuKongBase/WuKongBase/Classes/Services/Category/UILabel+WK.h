@@ -7,18 +7,18 @@
 
 #import <UIKit/UIKit.h>
 #import "NSMutableAttributedString+WK.h"
-#import "WKRichTextParseService.h"
+#import "QCRichTextParseService.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UILabel (WK)
 
-@property(nonatomic,strong) NSArray<id<WKMatchToken>> *tokens;
+@property(nonatomic,strong) NSArray<id<QCMatchToken>> *tokens;
 
--(void) onClick:(void(^)(id<WKMatchToken>))click;
+-(void) onClick:(void(^)(id<QCMatchToken>))click;
 
 - (BOOL)didTapAttributedTextInLabel:(UITapGestureRecognizer *)tapGesture inRange:(NSRange)targetRange;
 
--( id<WKMatchToken>) matchDidTapAttributedTextInLabelWithPoint:(CGPoint)locationOfTouchInLabel;
+-( id<QCMatchToken>) matchDidTapAttributedTextInLabelWithPoint:(CGPoint)locationOfTouchInLabel;
 -(void) onTap:(UITapGestureRecognizer*)gesture;
 @end
 

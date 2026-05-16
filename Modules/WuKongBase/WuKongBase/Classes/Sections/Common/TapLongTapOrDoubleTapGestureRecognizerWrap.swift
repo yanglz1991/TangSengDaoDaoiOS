@@ -1,5 +1,5 @@
 //
-//  WKTapLongTapOrDoubleTapGestureRecognizer.swift
+//  QCTapLongTapOrDoubleTapGestureRecognizer.swift
 //  WuKongBase
 //
 //  Created by tt on 2022/6/21.
@@ -10,16 +10,16 @@ import UIKit
 
 @objc public class TapLongTapOrDoubleTapGestureRecognizerWrap: NSObject {
     @objc public  var gesture: TapLongTapOrDoubleTapGestureRecognizer?
-    @objc public var tapAction:WKTapLongTapOrDoubleTapGesture
+    @objc public var tapAction:QCTapLongTapOrDoubleTapGesture
     @objc public var tapPoint:CGPoint
     let action:  (_ gesture:TapLongTapOrDoubleTapGestureRecognizerWrap)->Void?
-    @objc public var tapActionAtPoint: ((CGPoint) ->WKTapLongTapOrDoubleTapGestureRecognizerEvent )?
+    @objc public var tapActionAtPoint: ((CGPoint) ->QCTapLongTapOrDoubleTapGestureRecognizerEvent )?
     @objc public var longTap: ((CGPoint, TapLongTapOrDoubleTapGestureRecognizerWrap) -> Void)?
     
     @objc public init(action: @escaping (_ gesture:TapLongTapOrDoubleTapGestureRecognizerWrap)->Void) {
         self.action = action
         self.tapPoint = CGPoint()
-        self.tapAction = WKTapLongTapOrDoubleTapGestureTap
+        self.tapAction = QCTapLongTapOrDoubleTapGestureTap
        
     }
     
@@ -31,11 +31,11 @@ import UIKit
                 if  let event = strongSelf.tapActionAtPoint?(point) {
                     
                     switch event.action {
-                    case WKTapLongTapOrDoubleTapGestureRecognizerActionWaitForSingleTap:
+                    case QCTapLongTapOrDoubleTapGestureRecognizerActionWaitForSingleTap:
                         return .waitForSingleTap
-                    case WKTapLongTapOrDoubleTapGestureRecognizerActionFail:
+                    case QCTapLongTapOrDoubleTapGestureRecognizerActionFail:
                         return .fail
-                    case WKTapLongTapOrDoubleTapGestureRecognizerActionKeepWithSingleTap:
+                    case QCTapLongTapOrDoubleTapGestureRecognizerActionKeepWithSingleTap:
                         return .keepWithSingleTap
                     default:
                         return .fail
@@ -62,16 +62,16 @@ import UIKit
                 self.tapPoint = location
                 switch gesture {
                 case .tap:
-                    self.tapAction = WKTapLongTapOrDoubleTapGestureTap
+                    self.tapAction = QCTapLongTapOrDoubleTapGestureTap
                     break
                 case .doubleTap:
-                    self.tapAction = WKTapLongTapOrDoubleTapGestureDoubleTap
+                    self.tapAction = QCTapLongTapOrDoubleTapGestureDoubleTap
                     break
                 case .longTap:
-                    self.tapAction = WKTapLongTapOrDoubleTapGestureLongTap
+                    self.tapAction = QCTapLongTapOrDoubleTapGestureLongTap
                     break
                 case .hold:
-                    self.tapAction = WKTapLongTapOrDoubleTapGestureHold
+                    self.tapAction = QCTapLongTapOrDoubleTapGestureHold
                     break
                 }
                 self.action(self)

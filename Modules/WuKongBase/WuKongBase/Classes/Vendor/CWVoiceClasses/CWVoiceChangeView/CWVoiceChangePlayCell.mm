@@ -11,7 +11,7 @@
 #import "CWRecordModel.h"
 #import "CWAudioPlayer.h"
 #import "SoundTouchOperation.h"
-#import "WKApp.h"
+#import "QCApp.h"
 static CGFloat const levelWidth = 3.0;
 static CGFloat const levelMargin = 2.0;
 
@@ -354,8 +354,8 @@ static CGFloat const levelMargin = 2.0;
 }
 
 -(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 
 @end

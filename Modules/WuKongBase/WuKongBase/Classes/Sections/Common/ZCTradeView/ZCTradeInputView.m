@@ -19,7 +19,7 @@ typedef enum {
 
 #import "ZCTradeInputView.h"
 #import "NSString+Extension.h"
-#import "WKApp.h"
+#import "QCApp.h"
 #import "WuKongBase.h"
 @interface ZCTradeInputView ()
 /** 数字数组 */
@@ -51,7 +51,7 @@ typedef enum {
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = WKApp.shared.config.cellBackgroundColor;
+        self.backgroundColor = QCApp.shared.config.cellBackgroundColor;
         self.layer.cornerRadius = 10.0f;
         self.clipsToBounds = YES;
         /** 注册keyboard通知 */
@@ -241,7 +241,7 @@ typedef enum {
 
     NSMutableDictionary* attr = [NSMutableDictionary dictionary];
     attr[NSFontAttributeName] = titleFont;
-    attr[NSForegroundColorAttributeName] = WKApp.shared.config.defaultTextColor;
+    attr[NSForegroundColorAttributeName] = QCApp.shared.config.defaultTextColor;
     [title drawInRect:titleRect withAttributes:attr];
 
     // 画点
@@ -287,7 +287,7 @@ typedef enum {
 }
 
 -(UIImage*) imageName:(NSString*)name {
-    return [WKApp.shared loadImage:name moduleID:@"WuKongBase"];
-//    return [[WKResource shared] resourceForImage:name podName:@"WuKongBase_images"];
+    return [QCApp.shared loadImage:name moduleID:@"WuKongBase"];
+//    return [[QCResource shared] resourceForImage:name podName:@"WuKongBase_images"];
 }
 @end

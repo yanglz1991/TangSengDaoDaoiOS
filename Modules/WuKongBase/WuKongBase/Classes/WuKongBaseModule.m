@@ -7,7 +7,7 @@
 
 #import "WuKongBaseModule.h"
 #import "WuKongBase.h"
-@WKModule(WuKongBaseModule)
+@QCModule(WuKongBaseModule)
 @implementation WuKongBaseModule
 
 - (NSString *)moduleId {
