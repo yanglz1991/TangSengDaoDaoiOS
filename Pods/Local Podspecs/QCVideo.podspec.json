@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "summary": "A short description of QCVideo.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/tangtaoit/QCVideo",
+  "homepage": "https://github.com/qx-team/QCVideo",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "tangtaoit": "tt@tgo.ai"
+    "qx-team": "tt@tgo.ai"
   },
   "source": {
-    "git": "https://github.com/tangtaoit/QCVideo.git",
+    "git": "https://github.com/qx-team/QCVideo.git",
     "tag": "0.1.0"
   },
   "platforms": {

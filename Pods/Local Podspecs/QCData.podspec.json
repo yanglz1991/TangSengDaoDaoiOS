@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "summary": "A short description of QCData.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/tangtaoit/QCData",
+  "homepage": "https://github.com/qx-team/QCData",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "tangtaoit": "tt@wukong.ai"
+    "qx-team": "tt@qx.ai"
   },
   "source": {
-    "git": "https://github.com/tangtaoit/QCData.git",
+    "git": "https://github.com/qx-team/QCData.git",
     "tag": "0.1.0"
   },
   "platforms": {

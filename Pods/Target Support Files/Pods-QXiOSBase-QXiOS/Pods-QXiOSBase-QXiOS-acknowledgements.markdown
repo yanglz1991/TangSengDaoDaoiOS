@@ -1395,7 +1395,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## QCAuth
 
-Copyright (c) 2019 tangtaoit <tt@wukong.ai>
+Copyright (c) 2025 QX <support@qx.example>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1418,7 +1418,7 @@ THE SOFTWARE.
 
 ## QCContacts
 
-Copyright (c) 2019 tangtaoit <tt@wukong.ai>
+Copyright (c) 2025 QX <support@qx.example>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1646,7 +1646,7 @@ THE SOFTWARE.
 
 ## QCData
 
-Copyright (c) 2019 tangtaoit <tt@wukong.ai>
+Copyright (c) 2025 QX <support@qx.example>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1669,7 +1669,7 @@ THE SOFTWARE.
 
 ## QCFile
 
-Copyright (c) 2020 tangtaoit <tt@tgo.ai>
+Copyright (c) 2025 QX <support@qx.example>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1920,7 +1920,7 @@ THE SOFTWARE.
 
 ## QCVideo
 
-Copyright (c) 2020 tangtaoit <tt@tgo.ai>
+Copyright (c) 2025 QX <support@qx.example>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
