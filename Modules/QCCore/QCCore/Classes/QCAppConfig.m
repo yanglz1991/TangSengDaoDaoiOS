@@ -34,7 +34,7 @@
         self.clusterOn = YES;
         
          // ---------- 基础配置 ----------
-        self.themeColor = [UIColor colorWithRed:228.0f/255.0f green:99.0f/255.0f blue:66.0f/255.0f alpha:1.0]; // #2F70F5
+        self.themeColor = [UIColor colorWithRed:30.0f/255.0f green:144.0f/255.0f blue:255.0f/255.0f alpha:1.0]; // #1E90FF DodgerBlue
         self.backgroundColor = [self navBackgroudColorWithAlpha:1.0f];
         self.footerTipFontSize = 12.0f;
         self.defaultAvatar = [self imageName:@"Common/Index/DefaultAvatar"];
