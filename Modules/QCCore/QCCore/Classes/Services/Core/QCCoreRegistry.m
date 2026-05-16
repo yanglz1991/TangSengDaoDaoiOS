@@ -1,13 +1,13 @@
 //
-//  QCCore.m
+//  QCCoreRegistry.m
 //  QCCore
 //
 //  Created by tt on 2019/12/1.
 //
 
-#import "QCCore.h"
+#import "QCCoreRegistry.h"
 
-@implementation QCCore
+@implementation QCCoreRegistry
 
 
 -(void) registerEndpoint:(QCEndpoint*)endpoint {

@@ -317,7 +317,7 @@
 #pragma mark - WKNavigationDelegate
 
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(QCNavigation *)navigation {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self checkGoAndGobackBtn];
     
     __weak typeof(self) weakSelf = self;
@@ -328,7 +328,7 @@
     }
 }
 
-- (void)webView:(WKWebView *)webView didFailNavigation:(QCNavigation *)navigation withError:(NSError *)error {
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self checkGoAndGobackBtn];
 }
 
@@ -339,7 +339,7 @@
     [webView reload];
 }
 
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(QCNavigationActionPolicy))decisionHandler{
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     
     /*
      //如果是302重定向请求，此处拦截带上cookie重新request
@@ -364,12 +364,12 @@
         // bSucc是否成功调起
         if (bSucc) {
             [self.navigationController popViewControllerAnimated:NO];
-            decisionHandler(QCNavigationActionPolicyCancel);
+            decisionHandler(WKNavigationActionPolicyCancel);
             return;
         }
     }
 
-    decisionHandler(QCNavigationActionPolicyAllow);
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 

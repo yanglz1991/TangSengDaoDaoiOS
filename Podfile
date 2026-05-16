@@ -88,6 +88,27 @@ post_install do |installer|
     else
         Pod::UI.warn "未找到 privacy manifest 模板: #{privacy_manifest_template}"
     end
+
+    # ------------------------------------------------------------------
+    # Patch AFNetworking for Xcode 16+/SDK 17+: <netinet6/in6.h> became
+    # a private header. <netinet/in.h> already brings in IPv6 types,
+    # so we can safely strip the redundant import.
+    # ------------------------------------------------------------------
+    af_files = %w[
+      AFNetworking/AFNetworking/AFNetworkReachabilityManager.m
+      AFNetworking/AFNetworking/AFHTTPSessionManager.m
+    ]
+    af_files.each do |rel|
+        path = File.join(installer.sandbox.root, rel)
+        next unless File.exist?(path)
+        File.chmod(0644, path)
+        content = File.read(path)
+        new_content = content.sub(/^#import <netinet6\/in6\.h>\n/, '')
+        if new_content != content
+            File.write(path, new_content)
+            Pod::UI.puts "  - 已为 AFNetworking 移除私有头引用: #{rel}".green
+        end
+    end
 end
 
 

@@ -407,7 +407,7 @@
 #import "UIView+WK.h"
 #import "UIViewController+YJKeyBoard.h"
 #import "QCAnnotation.h"
-#import "QCCore.h"
+#import "QCCoreRegistry.h"
 #import "QCEndpoint.h"
 #import "QCEndpointManager.h"
 #import "QCModuleManager.h"

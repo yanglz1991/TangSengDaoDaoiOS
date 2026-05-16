@@ -6,7 +6,7 @@
 //
 
 #import "QCMessageListDataProviderImp.h"
-#import "QCbase.h"
+#import "QCCore.h"
 #import "QCMessageList.h"
 #import "QCEndToEndEncryptHitContent.h"
 #import "QCConversationListVM.h"
