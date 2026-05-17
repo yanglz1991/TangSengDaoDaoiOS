@@ -35,7 +35,13 @@
         [self.tabBar setBarTintColor:[UIColor whiteColor]];
         [self.tabBar setBackgroundColor:[UIColor whiteColor]];
     }
-   
+
+    // Tab 图标着色：选中态用主题蓝，未选中态用中性灰，PDF 走 Template 渲染由系统统一上色
+    self.tabBar.tintColor = [QCApp shared].config.themeColor;
+    if (@available(iOS 10.0, *)) {
+        self.tabBar.unselectedItemTintColor = [UIColor colorWithWhite:0.6 alpha:1.0];
+    }
+
     [self setupChildVC:QCConversationListVC.class title:@"" andImage:@"HomeTab" andSelectImage:@"HomeTabSelected"];
     [self setupChildVC:QCContactsVC.class title:@"" andImage:@"ContactsTab" andSelectImage:@"ContactsTabSelected"];
     [self setupChildVC:QCMeVC.class title:@"" andImage:@"MeTab" andSelectImage:@"MeTabSelected"];
@@ -47,8 +53,9 @@
     UIViewController * vcInstall = [[vc alloc] init];
     //VC.view.backgroundColor = UIColor.whiteColor;
     vcInstall.tabBarItem.title = title;
-    vcInstall.tabBarItem.image = [[UIImage imageNamed:image]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    vcInstall.tabBarItem.selectedImage = [[UIImage imageNamed:selectImage]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    // 用 Template 渲染让系统按 tabBar.tintColor / unselectedItemTintColor 自动着色
+    vcInstall.tabBarItem.image = [[UIImage imageNamed:image] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    vcInstall.tabBarItem.selectedImage = [[UIImage imageNamed:selectImage] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     vcInstall.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
     [self addChildViewController:vcInstall];
 }
