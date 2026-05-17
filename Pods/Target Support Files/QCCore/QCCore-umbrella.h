@@ -299,7 +299,6 @@
 #import "QCMeVM.h"
 #import "QCModuleVC.h"
 #import "QCModuleVM.h"
-#import "QCMyInviteCodeVC.h"
 #import "QCWebClientInfoVC.h"
 #import "QCSecureChannelManager.h"
 #import "QCSecureChannelMenu.h"

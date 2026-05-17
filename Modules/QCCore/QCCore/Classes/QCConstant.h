@@ -231,9 +231,6 @@
 // 安全与隐私
 #define QCPOINT_ME_SECURITY @"me.security"
 
-// 我的邀请码
-#define QCPOINT_ME_INVITE @"me.invite"
-
 // ---------- 通用设置 ----------
 
 #define QCPOINT_CATEGORY_COMMONSETTING @"commonsetting"

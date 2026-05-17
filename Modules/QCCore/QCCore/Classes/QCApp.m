@@ -83,7 +83,6 @@
 #import <ZLPhotoBrowser/ZLPhotoBrowser-Swift.h>
 #import "QCSDWebImageDownloaderOperation.h"
 #import <Bugly/Bugly.h>
-#import "QCMyInviteCodeVC.h"
 #import "QCProhibitwordsService.h"
 
 @import FPSCounter.Swift;
@@ -1495,18 +1494,6 @@ static  UIBackgroundTaskIdentifier _bgTaskToken;
         }];
     } category:QCPOINT_CATEGORY_ME sort:8000];
     
-    // 我的邀请码
-    [self setMethod:QCPOINT_ME_INVITE handler:^id _Nullable(id  _Nonnull param) {
-        if(!QCApp.shared.remoteConfig.registerInviteOn) {
-            return nil;
-        }
-        return [QCMeItem initWithTitle:LLangW(@"我的邀请码",weakSelf) icon:[weakSelf imageName:@"Me/Index/IconInviteCode"] onClick:^{
-             [[QCNavigationManager shared] pushViewController:[QCMyInviteCodeVC new] animated:YES];
-        }];
-    } category:QCPOINT_CATEGORY_ME sort:7900];
-   
-   
-   
     // 通用
     [self setMethod:QCPOINT_ME_COMMON handler:^id _Nullable(id  _Nonnull param) {
         return [QCMeItem initWithTitle:LLangW(@"通用",weakSelf) icon:[weakSelf imageName:@"Me/Index/IconSetting"] onClick:^{
