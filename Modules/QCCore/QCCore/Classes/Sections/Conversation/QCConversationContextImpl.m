@@ -15,6 +15,7 @@
 #import "QCAlertUtil.h"
 #import "QCAppConfig.h"
 #import "QCApp.h"
+#import "QXSessionInsights.h"
 #import <QCCore/QCCore-Swift.h>
 
 @interface QCConversationContextImpl ()
@@ -540,6 +541,11 @@
     QCMessage *message = [[[QCSDK shared] chatManager] sendMessage:content channel:self.channel setting:setting topic:topic];
     if([[QCSDK shared].chatManager needStoreOfIntercept:message]) {
         [self.conversationView.messageListView sendMessage:[[QCMessageModel alloc] initWithMessage:message]];
+    }
+    // 本地会话洞察：仅记录发送条数到本地周报，不上传服务器。
+    [[QXSessionInsights sharedInsights] recordSentMessage];
+    if (self.channel.channelId.length > 0) {
+        [[QXSessionInsights sharedInsights] recordConversationOpened:self.channel.channelId];
     }
     return message;
     

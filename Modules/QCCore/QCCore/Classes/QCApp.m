@@ -84,6 +84,7 @@
 #import "QCSDWebImageDownloaderOperation.h"
 #import <Bugly/Bugly.h>
 #import "QCProhibitwordsService.h"
+#import "QXTelemetry.h"
 
 @import FPSCounter.Swift;
 //#import <PINRemoteImage/PINImageView+PINRemoteImage.h>
@@ -346,6 +347,9 @@ static QCApp *_instance;
    
     // 设置登录成功回调
     [self setMethod:QCPOINT_LOGIN_SUCCESS handler:^id _Nullable(id  _Nonnull param) {
+        [[QXTelemetry sharedTelemetry] recordName:@"account.login.success"
+                                         category:@"account"
+                                         severity:QXTelemetrySeverityInfo];
         // 切换数据库
         [[QCKitDB shared] switchDB:[QCApp shared].loginInfo.uid];
         
@@ -381,6 +385,9 @@ static QCApp *_instance;
     
     // 设置登出回调
     [[QCApp shared] setMethod:QCPOINT_LOGIN_LOGOUT handler:^id _Nullable(id  _Nonnull param) {
+        [[QXTelemetry sharedTelemetry] recordName:@"account.logout"
+                                         category:@"account"
+                                         severity:QXTelemetrySeverityInfo];
         // 断开IM连接
         [[QCSDK shared].connectionManager logout];
         // 显示登录页面

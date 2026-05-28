@@ -60,6 +60,12 @@
     
     self.currentUrl = [NSURL URLWithString:url];
     
+    // 内容安全策略：拦截显式黑名单域名，避免在 App 内打开。
+    QXLinkPolicy linkPolicy = [[QXContentSecurityPolicy sharedPolicy] policyForURL:self.currentUrl];
+    if (linkPolicy == QXLinkPolicyBlock) {
+        [QCAlertUtil alert:@"该链接已被站点策略拦截"];
+        return;
+    }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
         cachePolicy:NSURLRequestReloadIgnoringCacheData

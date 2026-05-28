@@ -51,10 +51,12 @@
         self.imageMaxLimitBytes = 1024 * 500;
         
         self.warnColor = [QXBrandPalette warningColor];
-        self.defaultFont = [self appFontOfSize:16.0f];
+        // 阅读偏好：基准字号 16 / 14，根据用户设置的 fontScale 缩放（0.85 ~ 1.40）。
+        CGFloat readingScale = [[QXReadingPreferences sharedPreferences] fontScale];
+        self.defaultFont = [self appFontOfSize:16.0f * readingScale];
          // ---------- 消息相关 ----------
-        self.messageTextFontSize = 16.0f;
-        self.messageTipTimeFontSize = 14.0f;
+        self.messageTextFontSize = 16.0f * readingScale;
+        self.messageTipTimeFontSize = 14.0f * readingScale;
         self.messageAvatarSize = CGSizeMake(40.0f, 40.0f);
         self.smallAvatarSize = CGSizeMake(24.0f, 24.0f);
         self.middleAvatarSize = CGSizeMake(48.0f, 48.0f);
