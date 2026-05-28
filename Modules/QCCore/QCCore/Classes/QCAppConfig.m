@@ -27,7 +27,7 @@
 -(instancetype) init {
     self = [super init];
     if(self) {
-        self.appName = @"QX";
+        self.appName = @"喜聊";
         self.shortName = @"QX ID";
         self.appID = @""; // appstore的id
         self.appSchemaPrefix = @"qx";
@@ -70,7 +70,8 @@
         // ---------- 导航栏相关 ----------
 //        self.navBarButtonColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
         self.navBarTitleFont =  [self appFontOfSizeMedium:17.0f];
-        self.navBackgroudColor =[self navBackgroudColorWithAlpha:1.0f];
+        // 品牌色蓝 #007BF9 作为导航栏背景，文字/按钮在 getter 中默认返回白色
+        self.navBackgroudColor = [UIColor colorWithRed:0.0f/255.0f green:123.0f/255.0f blue:249.0f/255.0f alpha:1.0f];
         self.settingMemberAvatarSize = CGSizeMake(32.0f, 32.0f);
         self.tipColor = [UIColor colorWithRed:153.0f/255.0f green:153.0f/255.0f blue:153.0f/255.0f alpha:1.0f];
         self.navHeight = 44.0f + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -175,17 +176,11 @@
 }
 
 - (UIColor *)navBackgroudColor {
-    
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-            if([traitCollection userInterfaceStyle] == UIUserInterfaceStyleDark || self.style == QCSystemStyleDark) {
-                return [UIColor colorWithRed:16.0f/255.0f green:16.0f/255.0f blue:16.0f/255.0f alpha:1.0f];
-            }
-            return self->_navBackgroudColor;
-        }];
-    } else {
-        return _navBackgroudColor;
+    // 品牌色统一：light/dark 都使用 #007BF9，避免夜间模式下与主品牌不一致
+    if(!_navBackgroudColor) {
+        return [UIColor colorWithRed:0.0f/255.0f green:123.0f/255.0f blue:249.0f/255.0f alpha:1.0f];
     }
+    return _navBackgroudColor;
 }
 
 - (UIColor *)backgroundColor {
@@ -229,30 +224,24 @@
     
 }
 - (UIColor *)navBarTitleColor {
+    // 蓝色导航栏统一用白色标题
     if(!_navBarTitleColor) {
-        return [self defaultTextColor];
+        return [UIColor whiteColor];
     }
     return _navBarTitleColor;
 }
 
 - (UIColor *)navBarSubtitleColor {
+    // 副标题白色，半透明区分主标题
     if(!_navBarSubtitleColor) {
-        return [self tipColor];
+        return [UIColor colorWithWhite:1.0f alpha:0.8f];
     }
     return _navBarSubtitleColor;
 }
 
 - (UIColor *)navBarButtonColor {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-            if([traitCollection userInterfaceStyle] == UIUserInterfaceStyleDark || self.style == QCSystemStyleDark) {
-                return   [UIColor whiteColor];
-            }
-            return [UIColor colorWithRed:49.0f/255.0f green:49.0f/255.0f blue:49.0f/255.0f alpha:1.0f];
-        }];
-    } else {
-        return [UIColor colorWithRed:49.0f/255.0f green:49.0f/255.0f blue:49.0f/255.0f alpha:1.0f];
-    }
+    // 蓝底导航栏 light/dark 都用白色按钮（返回箭头、右上角图标/文字）
+    return [UIColor whiteColor];
 }
 
 
