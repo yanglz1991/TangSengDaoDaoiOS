@@ -51,6 +51,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    // 启动喜聊品牌运行时（身份、主题、遥测、隐私面板、阅读偏好等模块的初始化入口）
+    [[QXBootstrapper sharedBootstrapper] bootstrap];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor grayColor];
     [self.window makeKeyAndVisible];
@@ -99,8 +102,19 @@
     }
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [[QXBootstrapper sharedBootstrapper] applicationDidBecomeActive];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[QXBootstrapper sharedBootstrapper] applicationDidEnterBackground];
+}
+
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
     NSLog(@"内存警告");
+    [[QXTelemetry sharedTelemetry] recordName:@"app.memoryWarning"
+                                     category:@"lifecycle"
+                                     severity:QXTelemetrySeverityWarning];
 }
 
 -(void) checkAppVersionOrUpdate {

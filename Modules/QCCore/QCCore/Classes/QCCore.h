@@ -154,6 +154,9 @@
 #import "QCSearchMediaCell.h"
 #import "QCSearchMessageCell.h"
 
+// 喜聊品牌套件（QXKit）：身份/调色板/主题/动效/遥测/诊断/工具/隐私/阅读偏好等。
+#import "QXKit.h"
+
 #define LLang(a) [a Localized:self]
 #define LLangW(a,w) [a Localized:w]
 #define LLangC(a,c) [a LocalizedWithClass:c]

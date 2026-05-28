@@ -34,7 +34,8 @@
         self.clusterOn = YES;
         
          // ---------- 基础配置 ----------
-        self.themeColor = [UIColor colorWithRed:30.0f/255.0f green:144.0f/255.0f blue:255.0f/255.0f alpha:1.0]; // #1E90FF DodgerBlue
+        // 主题色由 QXBrandPalette 统一供给（Sky Blue #0EA5E9）。
+        self.themeColor = [QXBrandPalette primaryColor];
         self.backgroundColor = [self navBackgroudColorWithAlpha:1.0f];
         self.footerTipFontSize = 12.0f;
         self.defaultAvatar = [self imageName:@"Common/Index/DefaultAvatar"];
@@ -42,14 +43,14 @@
         
         self.defaultStickerPlaceholder = [self placeholderImageWithSize:CGSizeMake(114.0f, 114.0f) image:[self imageName:@"Common/Index/Placeholder"]];
         
-        self.defaultTextColor = [UIColor colorWithRed:49.0f/255.0f green:49.0f/255.0f blue:49.0f/255.0f alpha:1.0f];
+        self.defaultTextColor = [QXBrandPalette defaultTextColor];
         self.imageCacheDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"image"];
         
         self.fileStorageDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"qxfiles"];
         
         self.imageMaxLimitBytes = 1024 * 500;
         
-        self.warnColor = [UIColor colorWithRed:200.0f/255.0f green:70.0f/255.0f blue:70.0f/255.0f alpha:1.0f];
+        self.warnColor = [QXBrandPalette warningColor];
         self.defaultFont = [self appFontOfSize:16.0f];
          // ---------- 消息相关 ----------
         self.messageTextFontSize = 16.0f;
@@ -70,10 +71,10 @@
         // ---------- 导航栏相关 ----------
 //        self.navBarButtonColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
         self.navBarTitleFont =  [self appFontOfSizeMedium:17.0f];
-        // 品牌色蓝 #007BF9 作为导航栏背景，文字/按钮在 getter 中默认返回白色
-        self.navBackgroudColor = [UIColor colorWithRed:0.0f/255.0f green:123.0f/255.0f blue:249.0f/255.0f alpha:1.0f];
+        // 导航栏背景采用主色加深一阶 (QXBrandPalette navigationColor，约 #0284C7)。
+        self.navBackgroudColor = [QXBrandPalette navigationColor];
         self.settingMemberAvatarSize = CGSizeMake(32.0f, 32.0f);
-        self.tipColor = [UIColor colorWithRed:153.0f/255.0f green:153.0f/255.0f blue:153.0f/255.0f alpha:1.0f];
+        self.tipColor = [QXBrandPalette secondaryTextColor];
         self.navHeight = 44.0f + [UIApplication sharedApplication].statusBarFrame.size.height;
         
         // 数据每页默认请求大小
