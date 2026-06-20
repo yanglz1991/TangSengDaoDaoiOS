@@ -464,9 +464,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-QXiOSBase-QXiOS/Pods-QXiOSBase-QXiOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-QXiOSBase-QXiOS/Pods-QXiOSBase-QXiOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -789,7 +793,7 @@
 				CODE_SIGN_ENTITLEMENTS = QX/QX.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = F68A4Y2SZ5;
 				ENABLE_BITCODE = NO;
@@ -800,7 +804,7 @@
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				INFOPLIST_FILE = QX/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = QX;
+				INFOPLIST_KEY_CFBundleDisplayName = "禧语";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -811,7 +815,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-Objc",
@@ -900,7 +904,7 @@
 				CODE_SIGN_ENTITLEMENTS = QX/QX.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = F68A4Y2SZ5;
 				ENABLE_BITCODE = NO;
@@ -911,7 +915,7 @@
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				INFOPLIST_FILE = QX/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = QX;
+				INFOPLIST_KEY_CFBundleDisplayName = "禧语";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -922,7 +926,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-Objc",
