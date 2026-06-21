@@ -51,7 +51,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // 启动喜聊品牌运行时（身份、主题、遥测、隐私面板、阅读偏好等模块的初始化入口）
+    // 启动禧语品牌运行时（身份、主题、遥测、隐私面板、阅读偏好等模块的初始化入口）
     [[QXBootstrapper sharedBootstrapper] bootstrap];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

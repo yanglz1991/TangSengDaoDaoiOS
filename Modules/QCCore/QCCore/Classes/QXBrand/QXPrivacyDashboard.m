@@ -88,7 +88,7 @@
                           userControl:@"默认仅本地存储，可在设置中关闭"]];
 
     [list addObject:[self entryTitle:@"位置信息"
-                              summary:@"仅当你发送位置消息时使用。喜聊不会在后台采集你的地理位置。"
+                              summary:@"仅当你发送位置消息时使用。禧语不会在后台采集你的地理位置。"
                              category:QXPrivacyDataCategoryLocation
                              purposes:@[@(QXPrivacyDataPurposeAppFunctionality)]
                          leavesDevice:YES
@@ -161,7 +161,7 @@
 - (NSString *)userVisibleSummary {
     NSArray<QXPrivacyEntry *> *list = [self entries];
     NSMutableString *out = [NSMutableString string];
-    [out appendString:@"喜聊数据使用透明度声明\n\n"];
+    [out appendString:@"禧语数据使用透明度声明\n\n"];
     for (QXPrivacyEntry *e in list) {
         [out appendFormat:@"• %@\n  %@\n  保留：%@\n  你可以：%@\n\n",
          e.title, e.summary, e.retention, e.userControl];

@@ -2,7 +2,7 @@
 //  QXBrandIdentity.h
 //  QCCore
 //
-//  喜聊品牌身份描述模块。
+//  禧语品牌身份描述模块。
 //  本类用于在运行时聚合品牌的元数据签名，包括应用代号、口号、
 //  发布渠道、构建指纹、地域定位等信息。这些数据被独立模块
 //  （遥测、隐私面板、版本检测）共同消费。
@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, QXBrandRegion) {
 @interface QXBrandIdentity : NSObject
 
 @property (nonatomic, copy, readonly) NSString *codename;          // 品牌代号: xichat
-@property (nonatomic, copy, readonly) NSString *productName;       // 显示名: 喜聊
+@property (nonatomic, copy, readonly) NSString *productName;       // 显示名: 禧语
 @property (nonatomic, copy, readonly) NSString *productNameEN;     // 显示名: XiChat
 @property (nonatomic, copy, readonly) NSString *tagline;           // 品牌口号
 @property (nonatomic, copy, readonly) NSString *taglineEN;

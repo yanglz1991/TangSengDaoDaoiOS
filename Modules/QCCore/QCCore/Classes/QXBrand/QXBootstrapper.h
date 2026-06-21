@@ -2,7 +2,7 @@
 //  QXBootstrapper.h
 //  QCCore
 //
-//  喜聊品牌运行时启动器。在 AppDelegate didFinishLaunching
+//  禧语品牌运行时启动器。在 AppDelegate didFinishLaunching
 //  阶段一次性初始化所有 QX 品牌模块（身份、主题、遥测、
 //  指纹、网络探测、阅读偏好等），保证模块状态一致。
 //

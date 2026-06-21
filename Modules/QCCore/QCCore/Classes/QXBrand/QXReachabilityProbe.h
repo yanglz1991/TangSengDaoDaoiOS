@@ -2,7 +2,7 @@
 //  QXReachabilityProbe.h
 //  QCCore
 //
-//  喜聊轻量网络探测。基于 SCNetworkReachability，回报当前
+//  禧语轻量网络探测。基于 SCNetworkReachability，回报当前
 //  网络类型变化（wifi/cell/none），并发出通知。可选地以低
 //  频率 ping 自家服务以验证可达性。
 //

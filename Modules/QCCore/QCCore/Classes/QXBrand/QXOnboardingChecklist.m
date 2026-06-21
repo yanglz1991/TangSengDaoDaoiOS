@@ -47,7 +47,7 @@ static NSString * const kQXOnboardingDefaultsPrefix = @"QXOnboarding.";
         @[QXOnboardingTaskNickname,     @"完善昵称",     @"为你的账号取一个有特色的昵称。",         @(1)],
         @[QXOnboardingTaskFirstFriend,  @"添加第一位好友", @"通过手机号或扫一扫添加你的第一位好友。", @(2)],
         @[QXOnboardingTaskFirstGroup,   @"加入第一个群",  @"加入一个公开群，参与你感兴趣的话题。",   @(3)],
-        @[QXOnboardingTaskFirstMessage, @"发送首条消息",  @"和朋友说一声「喜聊见」吧。",           @(4)],
+        @[QXOnboardingTaskFirstMessage, @"发送首条消息",  @"和朋友说一声「禧语见」吧。",           @(4)],
         @[QXOnboardingTaskTwoFactor,    @"开启二步验证",  @"为账号增加一道安全屏障。",             @(5)],
         @[QXOnboardingTaskBackup,       @"启用聊天备份",  @"开启加密备份，避免重装时丢失记录。",     @(6)],
     ];

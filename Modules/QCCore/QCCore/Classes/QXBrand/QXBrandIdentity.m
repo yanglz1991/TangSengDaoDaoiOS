@@ -39,12 +39,12 @@
     self = [super init];
     if (self) {
         _codename          = @"xichat";
-        _productName       = @"喜聊";
+        _productName       = @"禧语";
         _productNameEN     = @"XiChat";
         _tagline           = @"温度连接，安心交流";
         _taglineEN         = @"Warm connections, calm conversations";
         _releaseDate       = @"2026-05-26";
-        _legalEntity       = @"喜聊运营团队";
+        _legalEntity       = @"禧语运营团队";
         _icpLicense        = @"";
         _contactEmail      = @"support@qx.ai";
         _supportSite       = @"https://www.githubim.cn";

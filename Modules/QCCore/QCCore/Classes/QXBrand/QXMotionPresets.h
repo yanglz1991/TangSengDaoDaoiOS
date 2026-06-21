@@ -2,7 +2,7 @@
 //  QXMotionPresets.h
 //  QCCore
 //
-//  喜聊动效预设。集中提供 spring/timing 动画曲线、过渡时长、
+//  禧语动效预设。集中提供 spring/timing 动画曲线、过渡时长、
 //  反馈震动等参数，确保全 App 动效一致。
 //
 
