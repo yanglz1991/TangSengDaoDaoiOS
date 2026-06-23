@@ -149,7 +149,12 @@
     self.headerView.lim_height = [self.settingMemberGridView viewHeight] + memberGridViewTop;
     [self.tableView reloadData];
     
-    self.title = [NSString stringWithFormat:LLang(@"聊天信息(%lu)"),self.viewModel.memberCount];
+    // ponytail: 仅群管理/群主可见人数，普通成员只显示"聊天信息"
+    if ([self.viewModel isManagerOrCreatorForMe]) {
+        self.title = [NSString stringWithFormat:LLang(@"聊天信息(%lu)"),self.viewModel.memberCount];
+    } else {
+        self.title = LLang(@"聊天信息");
+    }
 }
 //
 //- (UITableView *)tableView{
