@@ -87,9 +87,18 @@ static QCMessageQueueManager *_instance;
 -(void) stop {
     NSLog(@"MessageQueue stop");
     [self.sendPackets removeAllObjects];
-    if(self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
+    // ponytail: timer 在 main queue 创建，必须在 main queue invalidate，
+    //           否则跨线程 invalidate 会 crash（connectStatusChange 可能在 _imsocketQueue 调用 stop）
+    NSTimer *t = self.timer;
+    self.timer = nil;
+    if(t) {
+        if([NSThread isMainThread]) {
+            [t invalidate];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [t invalidate];
+            });
+        }
     }
 }
 

@@ -205,7 +205,7 @@ static QCApp *_instance;
     // lottie支持
     [[SDImageCodersManager sharedManager] addCoder:QCSDImageLottieCoder.sharedCoder];
     
-    [SDImageCacheConfig defaultCacheConfig].maxMemoryCost = 400 * 1024 * 1024; // 400M
+    [SDImageCacheConfig defaultCacheConfig].maxMemoryCost = 80 * 1024 * 1024; // 80M
     
     SDWebImageDownloader.sharedDownloader.config.operationClass = QCSDWebImageDownloaderOperation.class;
     

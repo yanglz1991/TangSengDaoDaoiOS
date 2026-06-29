@@ -118,31 +118,34 @@ static QCRetryManager *_instance;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [weakSelf startReminderRetry];
     });
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [weakSelf startReminderRetry];
-    });
-    
+
     self.expireMsgCheckTimer = [NSTimer scheduledTimerWithTimeInterval:QCSDK.shared.options.expireMsgCheckInterval target:self selector:@selector(startExpireMsgCheck) userInfo:nil repeats:YES];
 }
 
 -(void) stop {
     self.started = false;
-    if(self.retryTimer) {
-        [self.retryTimer invalidate];
-        self.retryTimer = nil;
-    }
-    if(self.messageExtraRetryTimer) {
-        [self.messageExtraRetryTimer invalidate];
-        self.messageExtraRetryTimer = nil;
-    }
-    if(self.reminderRetryTimer) {
-        [self.reminderRetryTimer invalidate];
-        self.reminderRetryTimer = nil;
-    }
-    if(self.expireMsgCheckTimer) {
-        [self.expireMsgCheckTimer invalidate];
-        self.expireMsgCheckTimer = nil;
+    
+    NSTimer *t1 = self.retryTimer;
+    NSTimer *t2 = self.messageExtraRetryTimer;
+    NSTimer *t3 = self.reminderRetryTimer;
+    NSTimer *t4 = self.expireMsgCheckTimer;
+    
+    self.retryTimer = nil;
+    self.messageExtraRetryTimer = nil;
+    self.reminderRetryTimer = nil;
+    self.expireMsgCheckTimer = nil;
+    
+    void (^invalidateTimers)(void) = ^{
+        [t1 invalidate];
+        [t2 invalidate];
+        [t3 invalidate];
+        [t4 invalidate];
+    };
+    
+    if([NSThread isMainThread]) {
+        invalidateTimers();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), invalidateTimers);
     }
 }
 

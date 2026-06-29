@@ -74,6 +74,10 @@
 
 @property(nonatomic,copy) void(^onConnectStatusChange)(QCConnectStatus status);
 
+// ponytail: 专用锁保护 ssocket 的读写，替代 @synchronized(self.ssocket)
+//           @synchronized(nil) 是空操作，ssocket 为 nil 时无任何线程保护
+@property(nonatomic,strong) NSLock *socketLock;
+
 @end
 
 @implementation QCConnectionManager
@@ -100,6 +104,7 @@ static dispatch_queue_t _imsocketQueue;
         _instance.tempBufferData = [[NSMutableData alloc] init];
         _instance.connectStatusLock =[[NSLock alloc] init];
         _instance.tempBufferDataLock =[[NSLock alloc] init];
+        _instance.socketLock = [[NSLock alloc] init];
         _instance.tempPackets = [NSMutableArray array];
         _instance.reconnectBackoff = [QCBackoff createWithBuilder:^(QCBackoffBuilder *builder) {
             builder.base = 2; // 每次递增秒数
@@ -146,29 +151,30 @@ static dispatch_queue_t _imsocketQueue;
 
 
 -(void) onlyConnect {
-    @synchronized (self.ssocket) {
-         if(self.connectStatusInner == QCConnected ||  self.connectStatusInner == QCConnecting) {
-              if([QCSDK shared].isDebug) {
-                  NSLog(@"已建立连接或在连接中，不再执行连接！");
-              }
-              return;
-          }
-          
-           // 拉取离线消息
-          [self changeConnectStatus:QCPullingOffline];
-        
-           self.pullOfflineFinished = false; // 还没有拉取离线
-          // 状态变为：连接中...
-          [self changeConnectStatus:QCConnecting];
-          
-        if(self.ssocket) {
-            self.ssocket.delegate = nil;
-            self.ssocket = nil;
-          }
-          // 循环去拿连接地址，直到拿到地址
-          [self loopGetAddrToConnect];
-        
-    }
+    [self.socketLock lock];
+    if(self.connectStatusInner == QCConnected ||  self.connectStatusInner == QCConnecting) {
+         if([QCSDK shared].isDebug) {
+             NSLog(@"已建立连接或在连接中，不再执行连接！");
+         }
+        [self.socketLock unlock];
+         return;
+     }
+     
+      // 拉取离线消息
+     [self changeConnectStatus:QCPullingOffline];
+   
+      self.pullOfflineFinished = false; // 还没有拉取离线
+     // 状态变为：连接中...
+     [self changeConnectStatus:QCConnecting];
+     
+   if(self.ssocket) {
+       self.ssocket.delegate = nil;
+       self.ssocket = nil;
+     }
+     // 循环去拿连接地址，直到拿到地址
+     [self loopGetAddrToConnect];
+   
+    [self.socketLock unlock];
 }
 
 -(void) loopGetAddrToConnect {
@@ -294,7 +300,10 @@ static dispatch_queue_t _imsocketQueue;
     self.forceDisconnect = force;
     [self.connectStatusLock unlock];
     
-    [self.ssocket disconnect];
+    [self.socketLock lock];
+    GCDAsyncSocket *sock = self.ssocket;
+    [self.socketLock unlock];
+    [sock disconnect];
     
 }
 
@@ -306,7 +315,10 @@ static dispatch_queue_t _imsocketQueue;
     
     [[QCSDK shared].channelManager removeChannelAllCache];
     
-    [self.ssocket disconnect];
+    [self.socketLock lock];
+    GCDAsyncSocket *sock = self.ssocket;
+    [self.socketLock unlock];
+    [sock disconnect];
 }
 
 // 重连
@@ -449,7 +461,10 @@ static dispatch_queue_t _imsocketQueue;
 }
 
 -(void) writeData:(NSData*) data {
-    [self.ssocket writeData:data withTimeout:1 tag:0];
+    [self.socketLock lock];
+    GCDAsyncSocket *sock = self.ssocket;
+    [self.socketLock unlock];
+    [sock writeData:data withTimeout:1 tag:0];
 }
 
 - (NSLock *)delegateLock {
@@ -772,12 +787,15 @@ static dispatch_queue_t _imsocketQueue;
 
 // 开始心跳
 -(void) startHeartbeat {
-    if(self.heartTimer){
-        [self.heartTimer invalidate];
-    }
+    NSTimer *t = self.heartTimer;
+    self.heartTimer = nil;
+    
     // 定时器必须在主线程才能执行
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (t) {
+            [t invalidate];
+        }
         weakSelf.heartTimer = [NSTimer scheduledTimerWithTimeInterval:[QCSDK shared].options.heartbeatInterval
                                                            target:weakSelf
                                                          selector:@selector(checkAndSendHeartbeat)
@@ -787,8 +805,16 @@ static dispatch_queue_t _imsocketQueue;
 }
 
 // 停止心跳
+// ponytail: heartTimer 在 main queue 创建，必须在 main queue invalidate，
+//           否则跨线程 invalidate 会触发 crash（socketDidDisconnect 在 _imsocketQueue 上调用）
 -(void) stopHeartbeat {
-    [self.heartTimer invalidate];
+    if([NSThread isMainThread]) {
+        [self.heartTimer invalidate];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.heartTimer invalidate];
+        });
+    }
     if([QCSDK shared].isDebug) {
         NSLog(@"心跳停止！");
     }
